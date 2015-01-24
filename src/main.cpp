@@ -21,7 +21,7 @@
  */
 
 #include "client.hpp"
-# include "meta-info.hpp"
+#include "meta-info.hpp"
 
 int
 main(int argc, char** argv)
@@ -68,7 +68,7 @@ main(int argc, char** argv)
     // Get info fields
     int64_t pieceLength = metainfo.getPieceLength(); // number of pieces
     std::vector<uint8_t> pieces = metainfo.getPieces(); // concatenated 20-byte SHA1 hash values
-    string name = metainfo.getName(); // file name
+    std::string name = metainfo.getName(); // file name
     int64_t length = metainfo.getLength(); // length of file
     
     
