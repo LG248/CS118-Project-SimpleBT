@@ -51,22 +51,25 @@ main(int argc, char** argv)
       length = (int64_t) length of file
     */
     
-    torrentFileName = argv[2] // file name str
-    // consists of bencoded dict m_root, and ptr to some data structure
-    // m_info to store metainfo.
-    metainfo = MetaInfo();
-    // metaInfo = MetaInfo::MetaInfo();
+    // Open .torrent file and decode
+    FILE * metaFile;
+    metaFile = fopen(argv[1],"r");
+    if (metaFile = NULL)
+    {
+      std::cerr << "Unable to open file!\n";
+      std::cerr << "Usage: simple-bt <port> <torrent_file>\n";
+      return 1
+    }
+      
+    sbt::MetaInfo metainfo;
+    metainfo.wireDecode(metaFile);
+    fclose(metaFile);
     
-    // somehow use the filename and specify the file
-    metainfo.setPath(argv[2]);// tell metainfo path to torrent file? or is this path the path inside the .torrent itself?
-    torrentFile = MetaInfo::File(); //
-    torrentFile.path = argv[2];
-    
-    metainfo.addFile(file); // this opens torrent file?
-    torrentFile.decode(metainfo.m_root); // this decodes a MetaInfo::File obj and returns updated dict? not sure if m_root is the dict we want either.
-    
-    
-    
+    // Get info fields
+    int64_t pieceLength = metainfo.getPieceLength(); // number of pieces
+    std::vector<uint8_t> pieces = metainfo.getPieces(); // concatenated 20-byte SHA1 hash values
+    string name = metainfo.getName(); // file name
+    int64_t length = metainfo.getLength(); // length of file
     
     
     
