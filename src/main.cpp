@@ -52,9 +52,9 @@ main(int argc, char** argv)
     */
     
     // Open .torrent file and decode
-    FILE * metaFile;
-    metaFile = fopen(argv[1],"r");
-    if (metaFile = NULL)
+    fstream metaFile;
+    metaFile = open(argv[1],"r");
+    if (metaFile == NULL)
     {
       std::cerr << "Unable to open file!\n";
       std::cerr << "Usage: simple-bt <port> <torrent_file>\n";
