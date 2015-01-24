@@ -52,7 +52,7 @@ main(int argc, char** argv)
     */
     
     // Open .torrent file and decode
-    fstream metaFile;
+    std::fstream metaFile;
     metaFile = open(argv[1],"r");
     if (metaFile == NULL)
     {
@@ -63,7 +63,7 @@ main(int argc, char** argv)
       
     sbt::MetaInfo metainfo;
     metainfo.wireDecode(metaFile);
-    fclose(metaFile);
+    metaFile.close();
     
     // Get info fields
     int64_t pieceLength = metainfo.getPieceLength(); // number of pieces
