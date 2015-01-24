@@ -17,9 +17,11 @@
  * NSL, e.g., in COPYING.md file.  If not, see <http://www.gnu.org/licenses/>.
  *
  * \author Yingdi Yu <yingdi@cs.ucla.edu>
+ * \author LG248
  */
 
 #include "client.hpp"
+# include "meta-info.hpp"
 
 int
 main(int argc, char** argv)
@@ -35,6 +37,33 @@ main(int argc, char** argv)
 
     // Initialise the client.
     sbt::Client client(argv[1], argv[2]);
+
+    /// 1. Parse torrent file ///
+    /*
+     Contents of metainfo file:
+     anounce: announce URL of tracker
+     info:
+      pieceLength = (int64_t) number of pieces
+      pieces = (byte string) concatenated 20-byte SHA1 hash values
+      name = (string) file name
+      length = (int64_t) length of file
+    */
+    
+    
+    
+    
+    
+    
+    
+    /// 2. Check status of downloaded files ///
+    
+    /// 3. Get tracker info ///
+
+    // (Send HTTP GET request to get peer info)
+    
+    /// 4. Get peer list and print ///
+    
+    
   }
   catch (std::exception& e)
   {
