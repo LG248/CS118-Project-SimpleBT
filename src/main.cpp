@@ -38,7 +38,9 @@ main(int argc, char** argv)
     // Initialise the client.
     sbt::Client client(argv[1], argv[2]);
 
+    
     /// 1. Parse torrent file ///
+    
     /*
      Contents of metainfo file:
      anounce: announce URL of tracker
@@ -49,6 +51,19 @@ main(int argc, char** argv)
       length = (int64_t) length of file
     */
     
+    torrentFileName = argv[2] // file name str
+    // consists of bencoded dict m_root, and ptr to some data structure
+    // m_info to store metainfo.
+    metainfo = MetaInfo();
+    // metaInfo = MetaInfo::MetaInfo();
+    
+    // somehow use the filename and specify the file
+    metainfo.setPath(argv[2]);// tell metainfo path to torrent file? or is this path the path inside the .torrent itself?
+    torrentFile = MetaInfo::File(); //
+    torrentFile.path = argv[2];
+    
+    metainfo.addFile(file); // this opens torrent file?
+    torrentFile.decode(metainfo.m_root); // this decodes a MetaInfo::File obj and returns updated dict? not sure if m_root is the dict we want either.
     
     
     
