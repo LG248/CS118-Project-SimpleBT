@@ -1,0 +1,27 @@
+Waf: Entering directory `/home/cs118/CS118-Project-SimpleBT/build'
+[ 6/16] Compiling src/main.cpp
+../src/main.cpp: In function ‘int main(int, char**)’:
+../src/main.cpp:54:5: error: ‘torrentFileName’ was not declared in this scope
+     torrentFileName = argv[2] // file name str
+     ^
+../src/main.cpp:57:5: error: expected ‘;’ before ‘metainfo’
+     metainfo = MetaInfo();
+     ^
+../src/main.cpp:61:5: error: ‘metainfo’ was not declared in this scope
+     metainfo.setPath(argv[2]);// tell metainfo path to torrent file? or is this path the path inside the .torrent itself?
+     ^
+../src/main.cpp:62:5: error: ‘torrentFile’ was not declared in this scope
+     torrentFile = MetaInfo::File(); //
+     ^
+../src/main.cpp:62:19: error: ‘MetaInfo’ has not been declared
+     torrentFile = MetaInfo::File(); //
+                   ^
+../src/main.cpp:65:22: error: ‘file’ was not declared in this scope
+     metainfo.addFile(file); // this opens torrent file?
+                      ^
+
+Waf: Leaving directory `/home/cs118/CS118-Project-SimpleBT/build'
+Build failed
+ -> task in 'SimpleBT' failed (exit status 1): 
+	{task 139748690971216: cxx main.cpp -> main.cpp.1.o}
+['/usr/bin/g++', '-std=c++0x', '-std=c++11', '-pedantic', '-Wall', '-O2', '-g', '-I/home/cs118/CS118-Project-SimpleBT/build/src', '-I/home/cs118/CS118-Project-SimpleBT/src', '-I/home/cs118/CS118-Project-SimpleBT/build', '-I/home/cs118/CS118-Project-SimpleBT', '-I/usr/include', '../src/main.cpp', '-c', '-o', '/home/cs118/CS118-Project-SimpleBT/build/src/main.cpp.1.o']
