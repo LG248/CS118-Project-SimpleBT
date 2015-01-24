@@ -1,44 +1,15 @@
 Waf: Entering directory `/home/cs118/CS118-Project-SimpleBT/build'
-[ 1/16] Compiling src/http/compat.cpp
-[ 2/16] Compiling src/http/http-headers.cpp
-[ 3/16] Compiling src/http/http-request.cpp
-[ 4/16] Compiling src/http/http-response.cpp
-[ 5/16] Compiling src/http/url-encoding.cpp
 [ 6/16] Compiling src/main.cpp
 ../src/main.cpp: In function ‘int main(int, char**)’:
-../src/main.cpp:57:24: warning: suggest parentheses around assignment used as truth value [-Wparentheses]
-     if (metaFile = NULL)
-                        ^
+../src/main.cpp:55:18: error: aggregate ‘std::fstream metaFile’ has incomplete type and cannot be defined
+     std::fstream metaFile;
+                  ^
+../src/main.cpp:56:28: error: incomplete type ‘std::fstream {aka std::basic_fstream<char>}’ used in nested name specifier
+     metaFile.open(argv[1], std::fstream::in);
+                            ^
 ../src/main.cpp:62:5: error: expected ‘;’ before ‘}’ token
      }
      ^
-../src/main.cpp:65:33: error: no matching function for call to ‘sbt::MetaInfo::wireDecode(FILE*&)’
-     metainfo.wireDecode(metaFile);
-                                 ^
-../src/main.cpp:65:33: note: candidate is:
-In file included from ../src/main.cpp:24:0:
-../src/meta-info.hpp:63:3: note: void sbt::MetaInfo::wireDecode(std::istream&)
-   wireDecode(std::istream& is);
-   ^
-../src/meta-info.hpp:63:3: note:   no known conversion for argument 1 from ‘FILE* {aka _IO_FILE*}’ to ‘std::istream& {aka std::basic_istream<char>&}’
-../src/main.cpp:71:5: error: ‘string’ was not declared in this scope
-     string name = metainfo.getName(); // file name
-     ^
-../src/main.cpp:71:5: note: suggested alternative:
-In file included from /usr/include/c++/4.8/string:39:0,
-                 from /usr/include/c++/4.8/stdexcept:39,
-                 from /usr/include/c++/4.8/array:38,
-                 from /usr/include/c++/4.8/tuple:39,
-                 from /usr/include/c++/4.8/functional:55,
-                 from ../src/common.hpp:47,
-                 from ../src/client.hpp:25,
-                 from ../src/main.cpp:23:
-/usr/include/c++/4.8/bits/stringfwd.h:62:33: note:   ‘std::string’
-   typedef basic_string<char>    string;   
-                                 ^
-../src/main.cpp:71:12: error: expected ‘;’ before ‘name’
-     string name = metainfo.getName(); // file name
-            ^
 ../src/main.cpp:69:13: warning: unused variable ‘pieceLength’ [-Wunused-variable]
      int64_t pieceLength = metainfo.getPieceLength(); // number of pieces
              ^
@@ -49,5 +20,5 @@ In file included from /usr/include/c++/4.8/string:39:0,
 Waf: Leaving directory `/home/cs118/CS118-Project-SimpleBT/build'
 Build failed
  -> task in 'SimpleBT' failed (exit status 1): 
-	{task 140208146033104: cxx main.cpp -> main.cpp.1.o}
+	{task 139759801625040: cxx main.cpp -> main.cpp.1.o}
 ['/usr/bin/g++', '-std=c++0x', '-std=c++11', '-pedantic', '-Wall', '-O2', '-g', '-I/home/cs118/CS118-Project-SimpleBT/build/src', '-I/home/cs118/CS118-Project-SimpleBT/src', '-I/home/cs118/CS118-Project-SimpleBT/build', '-I/home/cs118/CS118-Project-SimpleBT', '-I/usr/include', '../src/main.cpp', '-c', '-o', '/home/cs118/CS118-Project-SimpleBT/build/src/main.cpp.1.o']
