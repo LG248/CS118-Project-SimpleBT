@@ -78,29 +78,39 @@ main(int argc, char** argv)
     // - client requests peer info from tracker
     // - client reports meta info to tracker (info_hash, ip, port, event)
     // - client reports status to tracker (uploaded, downloaded, lef)
-    sbt::HttpRequest metainfoReq;
-    metainfoReq.setMethod(sbt::HttpRequest::GET); // TODO idk what values to put
-    metainfoReq.setHost(announce);
-    metainfoReq.setPort(12345);
-    metainfoReq.setPath("/"); // should be path?
-    metainfoReq.setVersion("1.0"); // should be 1.1?
+    sbt::HttpRequest getReq;
+    getReq.setMethod(sbt::HttpRequest::GET); // TODO idk what values to put
+    getReq.setHost(announce);
+    getReq.setPort(12345);
+    getReq.setPath("/"); // what should be path?
+    getReq.setVersion("1.0"); // should be 1.1?
     
-    size_t reqLen = metainfoReq.getTotalLength();
+    // TODO somehow add the &info_hash=...&downloaded=... stuff
+    // and the headers would be good to
+    
+    
+    /* TODO
+     1. (short-term) get the GET request to have all the right parts
+     2. send the GET request to the tracker
+     3. parse the information you get back from the tracker
+     4. peer info list
+     
+     */
+    
+    size_t reqLen = getReq.getTotalLength();
     char *metabuf = new char [reqLen];
-    metainfoReq.formatRequest(metabuf);
+    getReq.formatRequest(metabuf);
     std::cout << metabuf << std::endl; // TODO do stuff with the char buffer
-    std::cout << "test" << std::endl;
+    
+    // these just print out GET request
     std::string metastr = metabuf;
     std::cout << metastr << std::endl;
-    
     for (int i = 0; i < 100; i++)
     {
-      std::cout << "-";
       std::cout << metabuf[i];
     }
     std::cout << std::endl;
     delete [] metabuf;
-    
     
     
     
