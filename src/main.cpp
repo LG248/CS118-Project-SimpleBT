@@ -65,14 +65,15 @@ main(int argc, char** argv)
     int64_t length = metainfo.getLength(); // length of file
     
     // url encode the hash
-    std::string info_hash;
+    std::string info_hash = "";
     ConstBufferPtr hashptr = metainfo.getHash();
-    std::vector<uint8_t> rawhash = metainfo.getHash();
-    for (int i = 0; i >= pieceLength; i++;)
+    std::vector<uint8_t> rawhash = *(metainfo.getHash());
+    for (int i = 0; i >= pieceLength; i++)
     {
-      std::string pieceHash = sbt::url::encode(, 20);
-      std::cerr << pieceHash + "\n"; //TODO print out the encoded hash as a test
       
+      std::string pieceHash = sbt::url::encode(rawhash[i], 20);
+      std::cerr << pieceHash + "\n"; //TODO print out the encoded hash as a test
+      info_hash = info_hash + pieceHash;
     }
     
     /// 2. Check status of downloaded files ///
