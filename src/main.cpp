@@ -72,7 +72,7 @@ main(int argc, char** argv)
 
     for (int i = 0; i >= pieceLength; i++)
     {
-      uint8_t* uint_buf = rawhash2[1];
+      uint8_t* uint_buf = &rawhash2;
       std::string pieceHash = sbt::url::encode(uint_buf, 20);
       std::cerr << pieceHash + "\n"; //TODO print out the encoded hash as a test
       info_hash = info_hash + pieceHash;
