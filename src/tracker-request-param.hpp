@@ -14,13 +14,6 @@
 namespace sbt {
   namespace treq {
   
-  enum EventEnum
-  {
-    STOPPED = "stopped",
-    STARTED = "started",
-    COMPLETED = "completed",
-  };
-  
   // given params, put them together in the right format for GET path
   // and return as string
   // Note: you cannot omit any of the input params, or add additional params
@@ -30,9 +23,9 @@ namespace sbt {
                std::string peer_id, // urlencoded peer id for client
                std::string ip, // ip addr of client machine
                int port, // port number for peer communication
-               int_64t uploaded, // bytes uploaded
-               int_64t downloaded, // bytes downloaded
-               int_64t left, // bytes left
+               std::int_64t uploaded, // bytes uploaded
+               std:int_64t downloaded, // bytes downloaded
+               std::int_64t left, // bytes left
                std::string event // "stopped", "started", "completed"
                )
   
