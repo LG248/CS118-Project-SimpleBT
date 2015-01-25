@@ -24,7 +24,7 @@
 #include "client.hpp"
 #include "meta-info.hpp"
 #include "./http/url-encoding.hpp"
-#inclide "./http/http-request.hpp"
+#include "./http/http-request.hpp"
 
 int
 main(int argc, char** argv)
