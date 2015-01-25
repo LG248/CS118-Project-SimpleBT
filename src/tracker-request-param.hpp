@@ -12,7 +12,7 @@
 #include <iostream>
 #include <cstddef>
 #include <cstdint>
-#include "common.hpp>
+#include "common.hpp"
 
 namespace sbt {
   namespace treq {
