@@ -70,13 +70,12 @@ main(int argc, char** argv)
     //uint8_t* hashbuf2 = hashbuf1.buf();
     const uint8_t* hashbuf = metainfo.getHash()->buf();
     std::string info_hash = sbt::url::encode(hashbuf, sizeof(hashbuf));
-    std::cout << hashbuf + \n;
     for (int i=0; i=20; i++)
     {
       std::cout << hashbuf[i];
     }
     std::cout << std::endl;
-    std::cout << info_hash;
+    std::cout << info_hash + "\n";
     // is size 20 * num pieces?
     
     /// 2. Check status of downloaded files ///
