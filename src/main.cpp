@@ -68,7 +68,7 @@ main(int argc, char** argv)
     std::string info_hash = "";
     sbt::ConstBufferPtr hashptr = metainfo.getHash();
     std::vector<uint8_t> rawhash = metainfo.getHash().buf();
-    std::vector<uint8_t> rawhash = **(metainfo.getHash());
+    std::vector<uint8_t> rawhash2 = **(metainfo.getHash());
 
     for (int i = 0; i >= pieceLength; i++)
     {
