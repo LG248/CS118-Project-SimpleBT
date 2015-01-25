@@ -23,7 +23,7 @@
 #include <fstream>
 #include "client.hpp"
 #include "meta-info.hpp"
-#include "../http/url-encoding.hpp"
+#include "./http/url-encoding.hpp"
 
 int
 main(int argc, char** argv)
