@@ -65,13 +65,13 @@ main(int argc, char** argv)
     //int64_t length = metainfo.getLength(); // length of file
     
     // url encode the hash
-    std::string info_hash = "";
-    sbt::ConstBufferPtr hashptr = metainfo.getHash();
-    sbt::Buffer hashbuf1 = *hashptr;
-    uint8_t* hashbuf2 = hashbuf1.buf();
-    //std::vector<uint8_t> rawhash = *(metainfo.getHash());
+    //sbt::ConstBufferPtr hashptr = metainfo.getHash();
+    //sbt::Buffer hashbuf1 = *hashptr;
+    //uint8_t* hashbuf2 = hashbuf1.buf();
     const uint8_t* hashbuf = metainfo.getHash()->buf();
-
+    std::string info_hash = sbt::url::encode(hashbuf, 20);
+    std::cout << "cout is working\n";
+    std::cout << info_hash + "\n";
     // is size 20 * num pieces?
     for (int i = 0; i >= pieceLength; i++)
     {
