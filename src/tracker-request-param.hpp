@@ -10,6 +10,8 @@
 #define ____tracker_request_param__
 
 #include <iostream>
+#include <stdint.h>
+
 
 namespace sbt {
   namespace treq {
