@@ -28,11 +28,9 @@ namespace sbt {
                int64_t downloaded, // bytes downloaded
                int64_t left,       // bytes left
                std::string event   // "stopped", "started", "completed"
-               )
+    );
     
-    // TODO doesn't recognize int64_t even with include
-  
-  
+    
 
   }} // end namespace sbt and treq
 
