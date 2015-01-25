@@ -73,9 +73,9 @@ main(int argc, char** argv)
     std::cout << hashbuf + \n;
     for (int i=0; i=5; i++)
     {
-      cout << hashbuf[i];
+      std::cout << hashbuf[i];
     }
-    cout << endl;
+    std::cout << std::endl;
     std::cout << info_hash + "\n";
     // is size 20 * num pieces?
     
