@@ -76,7 +76,7 @@ main(int argc, char** argv)
       std::cout << hashbuf[i];
     }
     std::cout << std::endl;
-    std::cout << info_hash + "\n";
+    std::cout << info_hash;
     // is size 20 * num pieces?
     
     /// 2. Check status of downloaded files ///
