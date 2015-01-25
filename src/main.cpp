@@ -97,7 +97,6 @@ main(int argc, char** argv)
     {
       std::cout << "-";
       std::cout << metabuf[i];
-      std::cout << metabuf->int[i];
     }
     std::cout << std::endl;
     delete [] metabuf;
