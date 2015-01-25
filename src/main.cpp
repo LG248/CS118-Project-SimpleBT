@@ -70,7 +70,7 @@ main(int argc, char** argv)
     sbt::Buffer hashbuf1 = *hashptr;
     uint8_t* hashbuf2 = hashbuf1.buf();
     //std::vector<uint8_t> rawhash = *(metainfo.getHash());
-    uint8_t* hashbuf = metainfo.getHash()->buf();
+    const uint8_t* hashbuf = metainfo.getHash()->buf();
 
     // is size 20 * num pieces?
     for (int i = 0; i >= pieceLength; i++)
