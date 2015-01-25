@@ -68,13 +68,16 @@ main(int argc, char** argv)
     sbt::ConstBufferPtr hashptr = metainfo.getHash();
     sbt::Buffer hashbuf1 = *hashptr;
     uint8_t* hashbuf2 = hashbuf1.buf();
-    
+    std::string info_hash = sbt::url::encode(hashbuf, sizeof(hashbuf));
+
     for (int i=0; i<20; i++)
     {
-      std::cout << "-";
+      std::cout << "_";
       std::cout << hashbuf2[i];
     }
     std::cout << std::endl;
+    std::string info_hash1 = sbt::url::encode(hashbuf, sizeof(hashbuf));
+    std::cout << info_hash1 + "\n";
     std::cout << "\n\n";
     
     const uint8_t* hashbuf = metainfo.getHash()->buf();
