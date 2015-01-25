@@ -70,7 +70,7 @@ main(int argc, char** argv)
     sbt::Buffer hashbuf1 = *hashptr;
     uint8_t* hashbuf2 = hashbuf1.buf();
     std::string info_hash = sbt::url::encode(hashbuf2, 16); // TODO what is size?
-    
+    std::cout << info_hash + "\n";
     
     /// Tracker request ///
     
@@ -84,6 +84,7 @@ main(int argc, char** argv)
     metainfoReq.setPort(12345);
     metainfoReq.setPath("/"); // should be path?
     metainfoReq.setVersion("1.0"); // should be 1.1?
+    
     size_t reqLen = metainfoReq.getTotalLength();
     char *metabuf = new char [reqLen];
     metainfoReq.formatRequest(metabuf);
