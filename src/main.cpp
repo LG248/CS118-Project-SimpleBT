@@ -42,19 +42,9 @@ main(int argc, char** argv)
     
     /// 1. Parse torrent file ///
     
-    /*
-     Contents of metainfo file:
-     anounce: announce URL of tracker
-     info:
-      pieceLength = (int64_t) number of pieces
-      pieces = (byte string) concatenated 20-byte SHA1 hash values
-      name = (string) file name
-      length = (int64_t) length of file
-    */
-    
     // Open .torrent file and decode
     std::fstream metaFile;
-    metaFile.open(argv[1], std::fstream::in);
+    metaFile.open(argv[2], std::fstream::in);
     if (metaFile == NULL)
     {
       std::cerr << "Unable to open file!\n";
@@ -66,13 +56,15 @@ main(int argc, char** argv)
     metainfo.wireDecode(metaFile);
     metaFile.close();
     
-    // Get info fields
+    // Get announce and info fields
+    std::string announce = metainfo.getAnnounce(); // announce URL of tracker
     int64_t pieceLength = metainfo.getPieceLength(); // number of pieces
     std::vector<uint8_t> pieces = metainfo.getPieces(); // concatenated 20-byte SHA1 hash values
     std::string name = metainfo.getName(); // file name
     int64_t length = metainfo.getLength(); // length of file
     
-    
+    // url encode the hash
+    std::string encodedHash = encode(metainfo.getHash(), 20)
     
     /// 2. Check status of downloaded files ///
     
