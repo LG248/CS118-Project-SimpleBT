@@ -70,8 +70,10 @@ main(int argc, char** argv)
     //uint8_t* hashbuf2 = hashbuf1.buf();
     const uint8_t* hashbuf = metainfo.getHash()->buf();
     std::string info_hash = sbt::url::encode(hashbuf, sizeof(hashbuf));
-    for (int i=0; i=20; i++)
+    std::cout << "got the hash\n";
+    for (int i=0; i=2; i++)
     {
+      std::cout << "_";
       std::cout << hashbuf[i];
     }
     std::cout << std::endl;
