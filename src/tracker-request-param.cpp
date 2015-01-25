@@ -4,6 +4,7 @@
 #include "tracker-request-param.hpp"
 
 namespace sbt {
+  namespace treq {
 
 //returns path of form "?info_hash=<value1>&peer_id=<value2>&..."
 std::string
@@ -30,6 +31,6 @@ formatTrackerParams(std::string info_hash, // urlencoded metainfo
   return params;
 }
 
-}
+  }}
 
 
