@@ -10,7 +10,7 @@
 #define ____tracker_request_param__
 
 #include <iostream>
-#include <cstdint.h>
+#include "common.hpp"
 
 
 namespace sbt {
@@ -21,14 +21,14 @@ namespace sbt {
   // Note: you cannot omit any of the input params, or add additional params
   //       with this function.
   std::string
-  formatTrackerParams(std::string info_hash, // urlencoded metainfo
-               std::string peer_id, // urlencoded peer id for client
+  formatTrackerParams(std::string info_hash,  // urlencoded metainfo
+               std::string peer_id,  // urlencoded peer id for client
                std::string ip, // ip addr of client machine
-               int port, // port number for peer communication
-               int_64t uploaded, // bytes uploaded
+               int port,       // port number for peer communication
+               int_64t uploaded,   // bytes uploaded
                int_64t downloaded, // bytes downloaded
-               int_64t left, // bytes left
-               std::string event // "stopped", "started", "completed"
+               int_64t left,       // bytes left
+               std::string event   // "stopped", "started", "completed"
                )
     
     // TODO doesn't recognize int64_t even with include
