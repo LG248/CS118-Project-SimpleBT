@@ -48,7 +48,7 @@ main(int argc, char** argv)
     metaFile.open(argv[2], std::fstream::in);
     if (metaFile == NULL)
     {
-      std::cerr << "Unable to open file: " + argv[2] + "\n";
+      std::cerr << "Unable to open file: " << argv[2] << "\n";
       std::cerr << "Usage: simple-bt <port> <torrent_file>\n";
       return 1;
     }
@@ -67,7 +67,9 @@ main(int argc, char** argv)
     // url encode the hash
     std::string info_hash = "";
     sbt::ConstBufferPtr hashptr = metainfo.getHash();
-    std::vector<uint8_t> rawhash = *(metainfo.getHash());
+    std::vector<uint8_t> rawhash = metainfo.getHash().buf();
+    std::vector<uint8_t> rawhash = **(metainfo.getHash());
+
     for (int i = 0; i >= pieceLength; i++)
     {
       uint8_t* uint_buf = rawhash[1];
