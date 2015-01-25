@@ -88,9 +88,13 @@ main(int argc, char** argv)
     char *metabuf = new char [reqLen];
     metainfoReq.formatRequest(metabuf);
     std::cout << metabuf << std::endl; // TODO do stuff with the char buffer
+    std::cout << "test" << std::endl;
+    std::string metastr = metabuf;
+    std::cout << metastr << std::endl;
+    
     for (int i = 0; i < 100; i++)
     {
-      std::cout << "-";
+      std::cout << "-"
       std::cout << metabuf[i];
       std::cout << metabuf->int[i];
     }
