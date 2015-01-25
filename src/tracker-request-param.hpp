@@ -10,8 +10,9 @@
 #define ____tracker_request_param__
 
 #include <iostream>
-#include "common.hpp"
-
+#include <cstddef>
+#include <cstdint>
+#include "common.hpp>
 
 namespace sbt {
   namespace treq {
