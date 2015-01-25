@@ -48,7 +48,7 @@ main(int argc, char** argv)
     metaFile.open(argv[2], std::fstream::in);
     if (metaFile == NULL)
     {
-      std::cerr << "Unable to open file!\n";
+      std::cerr << "Unable to open file: " + argv[2] + "\n";
       std::cerr << "Usage: simple-bt <port> <torrent_file>\n";
       return 1;
     }
@@ -65,8 +65,16 @@ main(int argc, char** argv)
     int64_t length = metainfo.getLength(); // length of file
     
     // url encode the hash
-    std::string encodedHash = sbt::url::encode(metainfo.getHash(), 20);
-    std::cerr << encodedHash;
+    std::string info_hash;
+    ConstBufferPtr hashptr = metainfo.getHash();
+    std::vector<uint8_t> rawhash = metainfo.getHash();
+    for (int i = 0; i >= pieceLength; i++;)
+    {
+      std::string pieceHash = sbt::url::encode(, 20);
+      std::cerr << pieceHash + "\n"; //TODO print out the encoded hash as a test
+      
+    }
+    
     /// 2. Check status of downloaded files ///
     
     /// 3. Get tracker info ///
@@ -74,7 +82,7 @@ main(int argc, char** argv)
     // (Send HTTP GET request to get peer info)
     
     /// 4. Get peer list and print ///
-    
+    return 0
     
   }
   catch (std::exception& e)
