@@ -20,6 +20,7 @@
  * \author LG248
  */
 
+#include <fstream>
 #include "client.hpp"
 #include "meta-info.hpp"
 
