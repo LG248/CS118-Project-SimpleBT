@@ -66,12 +66,12 @@ main(int argc, char** argv)
     
     // url encode the hash
     std::string info_hash = "";
-    ConstBufferPtr hashptr = metainfo.getHash();
+    sbt::ConstBufferPtr hashptr = metainfo.getHash();
     std::vector<uint8_t> rawhash = *(metainfo.getHash());
     for (int i = 0; i >= pieceLength; i++)
     {
-      
-      std::string pieceHash = sbt::url::encode(rawhash[i], 20);
+      uint8_t* uint_buf = rawhash[1];
+      std::string pieceHash = sbt::url::encode(uint_buf, 20);
       std::cerr << pieceHash + "\n"; //TODO print out the encoded hash as a test
       info_hash = info_hash + pieceHash;
     }
