@@ -58,7 +58,7 @@ main(int argc, char** argv)
     metaFile.close();
     
     // Get announce and info fields
-    //std::string announce = metainfo.getAnnounce(); // announce URL of tracker
+    std::string announce = metainfo.getAnnounce(); // announce URL of tracker
     int64_t pieceLength = metainfo.getPieceLength(); // number of pieces
     std::vector<uint8_t> pieces = metainfo.getPieces(); // concatenated 20-byte SHA1 hash values
     //std::string name = metainfo.getName(); // file name
@@ -67,22 +67,8 @@ main(int argc, char** argv)
     // url encode the hash
     sbt::ConstBufferPtr hashptr = metainfo.getHash();
     sbt::Buffer hashbuf1 = *hashptr;
-    //uint8_t* hashbuf2 = hashbuf1.buf();
-    uint8_t hashbuf2 = hashptr->buf();
-    std::string info_hash16 = sbt::url::encode(hashbuf2, 16);
-    std::string info_hash20 = sbt::url::encode(hashbuf2, 16);
-
-
-    for (int i=0; i<20; i++)
-    {
-      std::cout << "_";
-      std::cout << hashbuf2[i];
-    }
-    std::cout << std::endl;
-    std::cout << info_hash16 + "\n";
-    std::cout << info_hash20 + "\n";
-
-    // is size 20 * num pieces?
+    uint8_t* hashbuf2 = hashbuf1.buf();
+    std::string info_hash = sbt::url::encode(hashbuf2, 16); // TODO is size 20 * num pieces?
     
     /// 2. Check status of downloaded files ///
     
