@@ -82,7 +82,7 @@ main(int argc, char** argv)
     getReq.setMethod(sbt::HttpRequest::GET); // TODO idk what values to put
     getReq.setHost(announce);
     getReq.setPort(12345);
-    getReq.setPath("/"); // what should be path?
+    getReq.setPath("/mycoolpath/"); // what should be path?
     getReq.setVersion("1.0"); // should be 1.1?
     
     // TODO somehow add the &info_hash=...&downloaded=... stuff
