@@ -78,8 +78,8 @@ main(int argc, char** argv)
     // - client requests peer info from tracker
     // - client reports meta info to tracker (info_hash, ip, port, event)
     // - client reports status to tracker (uploaded, downloaded, lef)
-    HttpRequest metainfoReq;
-    metainfoReq.setMethod(HttpRequest::GET); // TODO idk what values to put
+    sbt::HttpRequest metainfoReq;
+    metainfoReq.setMethod(sbt::HttpRequest::GET); // TODO idk what values to put
     metainfoReq.setHost(announce);
     metainfoReq.setPort(12345);
     metainfoReq.setPath("/"); // should be path?
