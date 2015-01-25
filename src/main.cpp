@@ -90,7 +90,7 @@ main(int argc, char** argv)
     std::cout << metabuf << std::endl; // TODO do stuff with the char buffer
     for (int i = 0; i < 100; i++)
     {
-      std::cout << metabuf[i];
+      std::cout << *metabuf[i];
     }
     std::cout << std::endl;
     delete [] metabuf;
