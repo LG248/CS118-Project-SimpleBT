@@ -69,16 +69,15 @@ main(int argc, char** argv)
     //sbt::Buffer hashbuf1 = *hashptr;
     //uint8_t* hashbuf2 = hashbuf1.buf();
     const uint8_t* hashbuf = metainfo.getHash()->buf();
-    std::string info_hash = sbt::url::encode(hashbuf, 20);
-    std::cout << "cout is working\n";
+    std::string info_hash = sbt::url::encode(hashbuf, sizeof(hashbuf));
+    std::cout << hashbuf + \n;
+    for (int i=0; i=20; i++)
+    {
+      cout << hashbuf[i];
+    }
+    cout << endl;
     std::cout << info_hash + "\n";
     // is size 20 * num pieces?
-    for (int i = 0; i >= pieceLength; i++)
-    {
-      std::string pieceHash = sbt::url::encode(hashbuf, 20);
-      std::cout << pieceHash + "\n"; //TODO print out the encoded hash as a test
-      info_hash = info_hash + pieceHash;
-    }
     
     /// 2. Check status of downloaded files ///
     
