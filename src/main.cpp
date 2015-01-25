@@ -76,7 +76,7 @@ main(int argc, char** argv)
       std::cout << hashbuf2[i];
     }
     std::cout << std::endl;
-    std::string info_hash1 = sbt::url::encode(hashbuf, sizeof(hashbuf));
+    std::string info_hash1 = sbt::url::encode(hashbuf2, sizeof(hashbuf));
     std::cout << info_hash1 + "\n";
     std::cout << "\n\n";
     
