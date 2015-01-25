@@ -12,6 +12,7 @@
 #include <iostream>
 
 namespace sbt {
+  namespace treq {
   
   enum EventEnum
   {
@@ -37,7 +38,7 @@ namespace sbt {
   
   
 
-} // end namespace sbt
+  }} // end namespace sbt and treq
 
 
 #endif /* defined(____tracker_request_param__) */
