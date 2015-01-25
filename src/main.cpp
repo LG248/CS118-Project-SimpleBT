@@ -27,6 +27,8 @@
 #include "./http/http-request.hpp"
 #include "tracker-request-param.hpp"
 
+using std::int_64t
+
 int
 main(int argc, char** argv)
 {
@@ -82,7 +84,7 @@ main(int argc, char** argv)
     int_64t uploaded = 0; // bytes uploaded
     int_64t downloaded = 0; // bytes downloaded
     int_64t left = length; // bytes left
-    std::string event // "stopped", "started", "completed"
+    std::string event; // "stopped", "started", "completed"
     
     std::string reqParams = sbt::formatTrackerParams(
                                                 info_hash,
@@ -107,7 +109,7 @@ main(int argc, char** argv)
     // create HTTP request
     sbt::HttpRequest getReq;
     getReq.setMethod(sbt::HttpRequest::GET);
-    getReq.setHost('COOL_localhost'); // TODO get from .torrent announce part, hardcode for now
+    getReq.setHost("COOL_localhost"); // TODO get from .torrent announce part, hardcode for now
     getReq.setPort(54321); // port of tracker TODO get from .torrent announce part, hardcode for now
     getReq.setPath(path); // all those params are in there
     getReq.setVersion("1.0"); // or should be 1.1?
