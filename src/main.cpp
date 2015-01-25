@@ -58,11 +58,11 @@ main(int argc, char** argv)
     metaFile.close();
     
     // Get announce and info fields
-    std::string announce = metainfo.getAnnounce(); // announce URL of tracker
+    //std::string announce = metainfo.getAnnounce(); // announce URL of tracker
     int64_t pieceLength = metainfo.getPieceLength(); // number of pieces
     std::vector<uint8_t> pieces = metainfo.getPieces(); // concatenated 20-byte SHA1 hash values
-    std::string name = metainfo.getName(); // file name
-    int64_t length = metainfo.getLength(); // length of file
+    //std::string name = metainfo.getName(); // file name
+    //int64_t length = metainfo.getLength(); // length of file
     
     // url encode the hash
     std::string info_hash = "";
@@ -83,7 +83,7 @@ main(int argc, char** argv)
     // (Send HTTP GET request to get peer info)
     
     /// 4. Get peer list and print ///
-    return 0
+    return 0;
     
   }
   catch (std::exception& e)
