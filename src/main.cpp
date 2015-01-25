@@ -64,8 +64,8 @@ main(int argc, char** argv)
     int64_t length = metainfo.getLength(); // length of file
     
     // url encode the hash
-    std::string encodedHash = encode(metainfo.getHash(), 20)
-    
+    std::string encodedHash = sbt::url::encode(metainfo.getHash(), 20);
+    std::cerr << encodedHash;
     /// 2. Check status of downloaded files ///
     
     /// 3. Get tracker info ///
