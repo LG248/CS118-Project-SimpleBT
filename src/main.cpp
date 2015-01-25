@@ -87,7 +87,12 @@ main(int argc, char** argv)
     size_t reqLen = metainfoReq.getTotalLength();
     char *metabuf = new char [reqLen];
     metainfoReq.formatRequest(metabuf);
-    std::cout << metabuf; // TODO do stuff with the char buffer
+    std::cout << metabuf << std::endl; // TODO do stuff with the char buffer
+    for (int i = 0; i < 100; i++)
+    {
+      std::cout << metabuf[i];
+    }
+    std::cout << std::endl;
     delete [] metabuf;
     
     
