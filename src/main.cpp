@@ -76,7 +76,7 @@ main(int argc, char** argv)
     for (int i = 0; i >= pieceLength; i++)
     {
       std::string pieceHash = sbt::url::encode(hashbuf, 20);
-      std::cerr << pieceHash + "\n"; //TODO print out the encoded hash as a test
+      std::cout << pieceHash + "\n"; //TODO print out the encoded hash as a test
       info_hash = info_hash + pieceHash;
     }
     
