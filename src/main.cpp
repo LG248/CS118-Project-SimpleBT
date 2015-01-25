@@ -24,6 +24,7 @@
 #include "client.hpp"
 #include "meta-info.hpp"
 #include "./http/url-encoding.hpp"
+#inclide "./http/http-request.hpp"
 
 int
 main(int argc, char** argv)
@@ -41,7 +42,7 @@ main(int argc, char** argv)
     sbt::Client client(argv[1], argv[2]);
 
     
-    /// 1. Parse torrent file ///
+    /// Parse torrent file ///
     
     // Open .torrent file and decode
     std::fstream metaFile;
@@ -68,15 +69,31 @@ main(int argc, char** argv)
     sbt::ConstBufferPtr hashptr = metainfo.getHash();
     sbt::Buffer hashbuf1 = *hashptr;
     uint8_t* hashbuf2 = hashbuf1.buf();
-    std::string info_hash = sbt::url::encode(hashbuf2, 16); // TODO is size 20 * num pieces?
+    std::string info_hash = sbt::url::encode(hashbuf2, 16); // TODO what is size?
     
-    /// 2. Check status of downloaded files ///
     
-    /// 3. Get tracker info ///
-
-    // (Send HTTP GET request to get peer info)
+    /// Tracker request ///
     
-    /// 4. Get peer list and print ///
+    // Send HTTP GET request to send/receive the following info:
+    // - client requests peer info from tracker
+    // - client reports meta info to tracker (info_hash, ip, port, event)
+    // - client reports status to tracker (uploaded, downloaded, lef)
+    sbt::HttpRequest metainfoReq;
+    metainfoReq.setMethod(HttpRequest::GET); // TODO idk what values to put
+    metainfoReq.setHost(announce);
+    metainfoReq.setPort(12345);
+    metainfoReq.setPath("/"); // should be path?
+    metainfoReq.setVersion("1.0"); // should be 1.1?
+    size_t reqLen = metainfoReq.getTotalLength();
+    char *metabuf = new char [reqLen];
+    metainfoReq.formatRequest(metabuf);
+    std::cout << metabuf; // TODO do stuff with the char buffer
+    delete [] metabuf;
+    
+    
+    
+    
+    /// Get peer list and print ///
     return 0;
     
   }
