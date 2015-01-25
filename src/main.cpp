@@ -67,7 +67,8 @@ main(int argc, char** argv)
     // url encode the hash
     std::string info_hash = "";
     sbt::ConstBufferPtr hashptr = metainfo.getHash();
-    uint8_t* hashbuf = *hashptr;
+    sbt::Buffer hashbuf1 = *hashptr;
+    uint8_t* hashbuf2 = hashbuf1.buf();
     //std::vector<uint8_t> rawhash = *(metainfo.getHash());
     uint8_t* hashbuf = *(metainfo.getHash()).buf();
 
