@@ -23,6 +23,7 @@
 #define SBT_META_INFO_HPP
 
 #include "util/bencoding.hpp"
+#include <stdint.h>
 
 namespace sbt {
 
