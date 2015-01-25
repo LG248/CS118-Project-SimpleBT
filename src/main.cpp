@@ -77,13 +77,13 @@ main(int argc, char** argv)
     std::string info_hash = sbt::url::encode(hashbuf2, 16); // TODO what is size?
     
     // other params
-    std::string peer_id; // urlencoded peer id for client
-    std::string ip; // ip of client machine
-    int port = std::atoi(argv[1]); // port number for peer communication
-    std::int_64t uploaded = 0; // bytes uploaded, 0 to start
-    std::int_64t downloaded = 0; // bytes downloaded
-    std::int_64t left = length; // bytes left (whole file to start) TODO right?
-    std::string event; // "stopped", "started", "completed"
+    std::string peer_id;            // urlencoded peer id for client
+    std::string ip;                 // ip of client machine
+    int port = std::atoi(argv[1]);  // port number for peer communication
+    int_64t uploaded = 0;           // bytes uploaded, 0 to start
+    int_64t downloaded = 0;         // bytes downloaded
+    int_64t left = length;        // bytes left (whole file to start) TODO right?
+    std::string event;            // "stopped", "started", "completed"
     
     std::string reqParams = sbt::treq::formatTrackerParams(
                                                 info_hash,

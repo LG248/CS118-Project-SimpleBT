@@ -23,9 +23,9 @@ namespace sbt {
                std::string peer_id, // urlencoded peer id for client
                std::string ip, // ip addr of client machine
                int port, // port number for peer communication
-               std::int_64t uploaded, // bytes uploaded
-               std:int_64t downloaded, // bytes downloaded
-               std::int_64t left, // bytes left
+               int_64t uploaded, // bytes uploaded
+               int_64t downloaded, // bytes downloaded
+               int_64t left, // bytes left
                std::string event // "stopped", "started", "completed"
                )
   
