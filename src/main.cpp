@@ -94,7 +94,7 @@ main(int argc, char** argv)
     
     for (int i = 0; i < 100; i++)
     {
-      std::cout << "-"
+      std::cout << "-";
       std::cout << metabuf[i];
       std::cout << metabuf->int[i];
     }
