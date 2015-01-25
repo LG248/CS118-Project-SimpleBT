@@ -53,7 +53,7 @@ main(int argc, char** argv)
     
     // Open .torrent file and decode
     std::fstream metaFile;
-    metaFile = open(argv[1], std::fstream::in);
+    metaFile.open(argv[1], std::fstream::in);
     if (metaFile == NULL)
     {
       std::cerr << "Unable to open file!\n";
