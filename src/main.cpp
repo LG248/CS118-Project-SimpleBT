@@ -59,7 +59,7 @@ main(int argc, char** argv)
     {
       std::cerr << "Unable to open file!\n";
       std::cerr << "Usage: simple-bt <port> <torrent_file>\n";
-      return 1
+      return 1;
     }
       
     sbt::MetaInfo metainfo;
