@@ -10,7 +10,7 @@
 #define ____tracker_request_param__
 
 #include <iostream>
-#include <stdint.h>
+#include <cstdint.h>
 
 
 namespace sbt {
@@ -30,6 +30,8 @@ namespace sbt {
                int_64t left, // bytes left
                std::string event // "stopped", "started", "completed"
                )
+    
+    // TODO doesn't recognize int64_t even with include
   
   
 
