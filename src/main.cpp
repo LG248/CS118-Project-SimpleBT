@@ -72,7 +72,7 @@ main(int argc, char** argv)
     for (int i=0; i<20; i++)
     {
       std::cout << "-";
-      std::cout << hashbuf[i];
+      std::cout << hashbuf2[i];
     }
     std::cout << std::endl;
     std::cout << "\n\n";
