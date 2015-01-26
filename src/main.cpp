@@ -37,6 +37,7 @@
 #include "meta-info.hpp"
 #include "./http/url-encoding.hpp"
 #include "./http/http-request.hpp"
+#include "./http/http-response.hpp"
 #include "tracker-request-param.hpp"
 
 
