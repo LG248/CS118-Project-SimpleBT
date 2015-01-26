@@ -182,11 +182,11 @@ main(int argc, char** argv)
     // send/receive data to/from connection
     bool isEnd = false;
     std::string input = metastr; // input is data to send
-    char buf[20] = {0}; // buf holds data received (is size 20 enough?)
+    char buf[120] = {0}; // buf holds data received (is size 20 enough?)
     std::stringstream ss; // buf is put into ss
     
     while (!isEnd) {
-      memset(buf, '\0', sizeof(buf));
+      memset(buf, '\0', sizeof(buf)); // null terminate buffer
       
       // sending
       if (send(sockfd, input.c_str(), input.size(), 0) == -1) {
@@ -195,11 +195,12 @@ main(int argc, char** argv)
       }
       
       // receiving
-      if (recv(sockfd, buf, 20, 0) == -1) {
+      if (recv(sockfd, buf, 120, 0) == -1) {
         perror("recv");
         return 5;
       }
       
+      std::cout << "printing tracker response buffer" << std::endl;
       std::cout << buf << std::endl;
       
       ss << buf << std::endl;
