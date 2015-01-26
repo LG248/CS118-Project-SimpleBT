@@ -142,27 +142,7 @@ main(int argc, char** argv)
     
     
     
-    /// Send the request to the tracker ///
-    
-    // set up socket (using settings for IPv4, TCP)
-    /*
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    struct sockaddr;
-    bind(sockfd, const struct sockaddr *, socklen_t addrlen); // 0 if bind successful, -1 if error
-    
-    // send the request
-    if (send(sockfd, metabuf, sizeof(metabuf), 0) == -1)
-    {
-      do stuff;
-    }
-     
-     // receive stuff from tracker
-     recv(sockfd, recbuf, sizeof(recbuf), 0);
-     
-     */
-    
-    
-    
+    /// Send the initial request to the tracker ///
     // Socket code modified from client.cpp posted by Yingdi Yu
     // http://irl.cs.ucla.edu/~yingdi/cs118/proj1/client.cpp
     
@@ -207,7 +187,6 @@ main(int argc, char** argv)
       memset(buf, '\0', sizeof(buf));
       
       // sending
-      //std::cin >> input; // get input from std in (TODO change to GET request)
       if (send(sockfd, input.c_str(), input.size(), 0) == -1) {
         perror("send");
         return 4;
@@ -218,12 +197,20 @@ main(int argc, char** argv)
         perror("recv");
         return 5;
       }
-      ss << buf << std::endl;
       
+      ss << buf << std::endl;
       if (ss.str() == "close\n")
         break;
       
-      // TODO do something with the ss
+      // parse response
+      sbt::HttpResponse resp;
+      resp.parseResponse(buf);
+      size_t respSize = resp.getTotalLength();
+      const std::string statusCode = resp.getStatusCode();
+      const std::string statusMsg = resp.getStatusMsg();
+      std::cout << statusCode << std::endl;
+      std::cout << statusMsg << std::endl;
+      
       ss.str(""); // clear ss (set to "")
     }
     
