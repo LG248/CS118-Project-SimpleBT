@@ -182,7 +182,12 @@ main(int argc, char** argv)
     // send/receive data to/from connection
     bool isEnd = false;
     std::string input = metastr; // input is data to send
-    char recbuf[20] = {0}; // buf holds data received (is size 20 enough?)
+    char recbuf[3000] = {0}; // buf holds data received
+    /* TODO in a while loop, keep receiving stuff from buffer and 
+       adding on to the stringstream until you reach some end of file signal
+        (maybe a newline or \r\n?)
+       (not sure what max received buf size should be)
+     */
     std::stringstream ss; // buf is put into ss
     
     while (!isEnd) {
@@ -200,42 +205,33 @@ main(int argc, char** argv)
         return 5;
       }
       
+      // print out the recbuf
       std::cout << "size of recbuf: " << sizeof(recbuf) << std::endl;
       std::cout << "printing tracker response buffer" << std::endl;
       std::cout << recbuf << std::endl;
       
+      // add to string stream
       ss << recbuf << std::endl;
       if (ss.str() == "close\n")
         break;
       // roughly end of client.cpp-based code
       
-      
-      /*
-      // parse HTTP response (actually need tracker response)
-      sbt::HttpResponse resp;
-      resp.parseResponse(buf, 20); // buffer size is 20
-      size_t respSize = resp.getTotalLength();
-      const std::string statusCode = resp.getStatusCode();
-      const std::string statusMsg = resp.getStatusMsg();
-      std::cout << "status code and message" << std::endl;
-      std::cout << statusCode << std::endl;
-      std::cout << statusMsg << std::endl;
-      */
-      
 
       // parse tracker response
       sbt::TrackerResponse trackerResp;
-      //resp.decode(bencodedResponse);
+      respDict = bencoding::Dictionary();
+      respDict.wireDecode(ss);
+      trackerResp.decode(respDic);
       
-      // TODO check for failure
+      if (trackerResp.isFailure())       // handle failure
+      {
+        std::cerr << "Tracker failure:" << std::endl;
+        std::cerr << trackerResp.getFailure() << std::endl;
+        break; // TODO figure out what failure indicates and if you should return
+      }
       
-      
-      
-      // how long to wait before next request
-      uint64_t interval = trackerResp.getInterval();
-      
-      // peer info
-      sbt::PeerInfo peer_info;
+      uint64_t interval = trackerResp.getInterval(); // how long to wait
+      sbt::PeerInfo peer_info = trackerResp.getPeers();
       
       ss.str(""); // clear ss (set to "")
       
@@ -244,11 +240,24 @@ main(int argc, char** argv)
     
     close(sockfd);
     
-
+    
+    /*
+     // parse HTTP response (actually need tracker response)
+     sbt::HttpResponse resp;
+     resp.parseResponse(buf, 20); // buffer size is 20 for now?
+     size_t respSize = resp.getTotalLength();
+     const std::string statusCode = resp.getStatusCode();
+     const std::string statusMsg = resp.getStatusMsg();
+     std::cout << "status code and message" << std::endl;
+     std::cout << statusCode << std::endl;
+     std::cout << statusMsg << std::endl;
+     */
+    
     
     /* TODO
      1. x (short-term) get the GET request to have all the right parts
      2. x send the GET request to the tracker
+     2.5. get info back from the tracker (TODO figure out buffer size)
      3. parse the information you get back from the tracker
      4. peer info list
      5. Do 2-4 in a while loop so client is periodically messaging tracker
