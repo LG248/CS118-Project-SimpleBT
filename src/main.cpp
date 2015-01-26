@@ -89,8 +89,8 @@ main(int argc, char** argv)
     std::string info_hash = sbt::url::encode(hashbuf2, 16); // TODO what is size?
     
     // other params
-    std::string peer_id;            // urlencoded peer id for client
-    std::string ip_str;             // ip of client machine
+    std::string peer_id = "somepeer";        // urlencoded peer id for client
+    std::string ip_str = "127.0.0.1";        // ip of client machine
     int port = std::atoi(argv[1]);  // port number for peer communication
     int64_t uploaded = 0;           // bytes uploaded, 0 to start
     int64_t downloaded = 0;         // bytes downloaded
@@ -120,8 +120,8 @@ main(int argc, char** argv)
     // create HTTP request
     sbt::HttpRequest getReq;
     getReq.setMethod(sbt::HttpRequest::GET);
-    getReq.setHost("COOL_localhost"); // TODO get from .torrent announce part, hardcode for now
-    getReq.setPort(54321); // port of tracker TODO get from .torrent announce part, hardcode for now
+    getReq.setHost("localhost"); // TODO get from .torrent announce part, hardcode for now
+    getReq.setPort(12345); // port of tracker TODO get from .torrent announce part, hardcode for now
     getReq.setPath(path); // all those params are in there
     getReq.setVersion("1.0"); // or should be 1.1?
     getReq.addHeader("Accept-Language", "en-US");
