@@ -87,8 +87,16 @@ main(int argc, char** argv)
     sbt::Buffer hashbuf1 = *hashptr;
     uint8_t* hashbuf2 = hashbuf1.buf();
     std::string info_hash = sbt::url::encode(hashbuf2, 16); // TODO what is size?
-    std::cout << hashbuf2 << std::endl;
     std::cout << info_hash << std::endl;
+    
+    std::string info_hash1 = sbt::url::encode(hashbuf2, 10);
+    std::string info_hash2 = sbt::url::encode(hashbuf2, 15);
+    std::string info_hash3 = sbt::url::encode(hashbuf2, 20);
+
+    std::cout << info_hash1 << std::endl;
+    std::cout << info_hash2 << std::endl;
+    std::cout << info_hash3 << std::endl;
+
     
     // other params
     std::string peer_id = "somepeer";        // urlencoded peer id for client
