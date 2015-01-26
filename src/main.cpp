@@ -185,7 +185,7 @@ main(int argc, char** argv)
     char recbuf[3000] = {0}; // buf holds data received
     /* TODO in a while loop, keep receiving stuff from buffer and 
        adding on to the stringstream until you reach some end of file signal
-        (maybe a newline or \r\n?)
+        (maybe a newline or \r\n?), or parse content length from file?
        (not sure what max received buf size should be)
      */
     std::stringstream ss; // buf is put into ss
