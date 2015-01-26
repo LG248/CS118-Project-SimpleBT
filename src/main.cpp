@@ -205,7 +205,7 @@ main(int argc, char** argv)
       
       // parse response
       sbt::HttpResponse resp;
-      resp.parseResponse(buf);
+      resp.parseResponse(&buf);
       size_t respSize = resp.getTotalLength();
       const std::string statusCode = resp.getStatusCode();
       const std::string statusMsg = resp.getStatusMsg();
