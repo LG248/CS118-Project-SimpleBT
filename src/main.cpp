@@ -164,6 +164,9 @@ main(int argc, char** argv)
     // Socket code modified from client.cpp posted by Yingdi Yu
     // http://irl.cs.ucla.edu/~yingdi/cs118/proj1/client.cpp
     
+    // create a socket using TCP IP
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    
     // format server socket address
     struct sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
@@ -194,7 +197,7 @@ main(int argc, char** argv)
     
     // send/receive data to/from connection
     bool isEnd = false;
-    std::string input; // input is data to set
+    std::string input = metastr; // input is data to set
     char buf[20] = {0}; // buf holds data received
     std::stringstream ss; // buf is put into ss
     
@@ -202,7 +205,7 @@ main(int argc, char** argv)
       memset(buf, '\0', sizeof(buf));
       
       // sending
-      std::cin >> input; // get input from std in (TODO change to GET request)
+      //std::cin >> input; // get input from std in (TODO change to GET request)
       if (send(sockfd, input.c_str(), input.size(), 0) == -1) {
         perror("send");
         return 4;
