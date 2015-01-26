@@ -203,7 +203,7 @@ main(int argc, char** argv)
         break;
       
       // parse response
-      sbt::HttpResponse resp;
+      HttpResponse resp;
       resp.parseResponse(buf);
       size_t respSize = resp.getTotalLength();
       const std::string statusCode = resp.getStatusCode();
