@@ -186,7 +186,7 @@ main(int argc, char** argv)
     std::stringstream ss; // buf is put into ss
     
     while (!isEnd) {
-      memset(buf, '\0', sizeof(recbuf)); // null terminate buffer
+      memset(recbuf, '\0', sizeof(recbuf)); // null terminate buffer
       
       // sending
       if (send(sockfd, input.c_str(), input.size(), 0) == -1) {
@@ -200,7 +200,7 @@ main(int argc, char** argv)
         return 5;
       }
       
-      std::cout << "size of recbuf: " + std::atoi(sizeof(recbuf)) << std::endl;
+      std::cout << "size of recbuf: " << sizeof(recbuf) << std::endl;
       std::cout << "printing tracker response buffer" << std::endl;
       std::cout << buf << std::endl;
       
