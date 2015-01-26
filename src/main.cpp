@@ -37,7 +37,8 @@
 #include "meta-info.hpp"
 #include "./http/url-encoding.hpp"
 #include "./http/http-request.hpp"
-#include "./http/http-response.hpp"
+#include "tracker-response.hpp"
+//#include "./http/http-response.hpp"
 #include "tracker-request-param.hpp"
 
 
@@ -181,7 +182,7 @@ main(int argc, char** argv)
     // send/receive data to/from connection
     bool isEnd = false;
     std::string input = metastr; // input is data to send
-    char buf[20] = {0}; // buf holds data received
+    char buf[20] = {0}; // buf holds data received (is size 20 enough?)
     std::stringstream ss; // buf is put into ss
     
     while (!isEnd) {
@@ -199,13 +200,12 @@ main(int argc, char** argv)
         return 5;
       }
       
+      std::cout << buf << std::endl;
+      
       ss << buf << std::endl;
       if (ss.str() == "close\n")
         break;
       // roughly end of client.cpp-based code
-      
-      // parse tracker response
-      //sbt::TrackerResponse resp;
       
       
       /*
@@ -220,7 +220,24 @@ main(int argc, char** argv)
       std::cout << statusMsg << std::endl;
       */
       
+
+      // parse tracker response
+      sbt::TrackerResponse resp;
+      //resp.decode(bencodedResponse);
+      
+      // TODO check for failure
+      
+      
+      
+      // how long to wait before next request
+      uint64_t interval = trackResp.getInterval();
+      
+      // peer info
+      sbt::PeerInfo peer_info;
+      
       ss.str(""); // clear ss (set to "")
+      
+      
     }
     
     close(sockfd);
