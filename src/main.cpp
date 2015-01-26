@@ -20,6 +20,18 @@
  * \author LG248
  */
 
+// includes from client.cpp
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <string.h>
+#include <stdio.h>
+#include <errno.h>
+#include <unistd.h>
+
+#include <iostream>
+#include <sstream>
 #include <fstream>
 #include "client.hpp"
 #include "meta-info.hpp"
@@ -78,17 +90,17 @@ main(int argc, char** argv)
     
     // other params
     std::string peer_id;            // urlencoded peer id for client
-    std::string ip;                 // ip of client machine
+    std::string ip_str;             // ip of client machine
     int port = std::atoi(argv[1]);  // port number for peer communication
     int64_t uploaded = 0;           // bytes uploaded, 0 to start
     int64_t downloaded = 0;         // bytes downloaded
-    int64_t left = length;        // bytes left (whole file to start) TODO right?
-    std::string event;            // "stopped", "started", "completed"
+    int64_t left = length;          // bytes left (whole file to start) TODO right?
+    std::string event = "stopped";  // "stopped", "started", "completed"
     
     std::string reqParams = sbt::treq::formatTrackerParams(
                                                 info_hash,
                                                 peer_id,
-                                                ip,
+                                                ip_str,
                                                 port,
                                                 uploaded,
                                                 downloaded,
@@ -114,7 +126,105 @@ main(int argc, char** argv)
     getReq.setVersion("1.0"); // or should be 1.1?
     getReq.addHeader("Accept-Language", "en-US");
 
+    // get HTTP request as char buffer
+    size_t reqLen = getReq.getTotalLength();
+    char *metabuf = new char [reqLen];
+    getReq.formatRequest(metabuf);
+    std::cout << metabuf << std::endl; // TODO do stuff with the char buffer
     
+    // these just convert GET request buf to string and print
+    std::string metastr = metabuf;
+    std::cout << metastr << std::endl;
+
+    delete [] metabuf; // delete buffer when done
+    
+    
+    
+    /// Send the request to the tracker ///
+    
+    // set up socket (using settings for IPv4, TCP)
+    /*
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    struct sockaddr;
+    bind(sockfd, const struct sockaddr *, socklen_t addrlen); // 0 if bind successful, -1 if error
+    
+    // send the request
+    if (send(sockfd, metabuf, sizeof(metabuf), 0) == -1)
+    {
+      do stuff;
+    }
+     
+     // receive stuff from tracker
+     recv(sockfd, recbuf, sizeof(recbuf), 0);
+     
+     */
+    
+    
+    
+    // Socket code modified from client.cpp posted by Yingdi Yu
+    // http://irl.cs.ucla.edu/~yingdi/cs118/proj1/client.cpp
+    
+    // format server socket address
+    struct sockaddr_in serverAddr;
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(40000);     // short, network byte order
+    serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
+    
+    // connect to the server
+    if (connect(sockfd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1) {
+      perror("connect");
+      return 2;
+    }
+    
+    // get client address from sockfd
+    struct sockaddr_in clientAddr;
+    socklen_t clientAddrLen = sizeof(clientAddr);
+    if (getsockname(sockfd, (struct sockaddr *)&clientAddr, &clientAddrLen) == -1) {
+      perror("getsockname");
+      return 3;
+    }
+    
+    // display ipaddr as string
+    char ipstr[INET_ADDRSTRLEN] = {'\0'};
+    inet_ntop(clientAddr.sin_family, &clientAddr.sin_addr, ipstr, sizeof(ipstr));
+    std::cout << "Set up a connection from: " << ipstr << ":" <<
+    ntohs(clientAddr.sin_port) << std::endl;
+    
+    
+    // send/receive data to/from connection
+    bool isEnd = false;
+    std::string input; // input is data to set
+    char buf[20] = {0}; // buf holds data received
+    std::stringstream ss; // buf is put into ss
+    
+    while (!isEnd) {
+      memset(buf, '\0', sizeof(buf));
+      
+      // sending
+      std::cin >> input; // get input from std in (TODO change to GET request)
+      if (send(sockfd, input.c_str(), input.size(), 0) == -1) {
+        perror("send");
+        return 4;
+      }
+      
+      // receiving
+      if (recv(sockfd, buf, 20, 0) == -1) {
+        perror("recv");
+        return 5;
+      }
+      ss << buf << std::endl;
+      
+      if (ss.str() == "close\n")
+        break;
+      
+      // TODO do something with the ss
+      ss.str(""); // clear ss (set to "")
+    }
+    
+    close(sockfd);
+    
+
     
     /* TODO
      1. (short-term) get the GET request to have all the right parts
@@ -123,22 +233,6 @@ main(int argc, char** argv)
      4. peer info list
      5. Do 2-4 in a while loop so client is periodically messaging tracker
      */
-    
-    size_t reqLen = getReq.getTotalLength();
-    char *metabuf = new char [reqLen];
-    getReq.formatRequest(metabuf);
-    std::cout << metabuf << std::endl; // TODO do stuff with the char buffer
-    
-    // these just print out GET request
-    std::string metastr = metabuf;
-    std::cout << metastr << std::endl;
-    //for (int i = 0; i < 100; i++)
-    //{
-    //  std::cout << metabuf[i];
-    //}
-    std::cout << std::endl;
-    delete [] metabuf;
-    
     
     
     /// Get peer list and print ///

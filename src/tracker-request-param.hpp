@@ -30,7 +30,6 @@ namespace sbt {
                std::string event   // "stopped", "started", "completed"
     );
     
-    
 
   }} // end namespace sbt and treq
 
