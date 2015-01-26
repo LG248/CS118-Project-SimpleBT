@@ -26,7 +26,7 @@ formatTrackerParams(std::string info_hash, // urlencoded metainfo
     "&port=" + std::to_string(port) +
     "&uploaded=" + std::to_string(uploaded) +
     "&downloaded=" + std::to_string(downloaded) +
-    "&left=" + std::to_string(left)
+    "&left=" + std::to_string(left);
     //"&event=" + event;
   
   if (event.strcompare("no_event") != 0): // if other than "no_event"
