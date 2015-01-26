@@ -202,7 +202,7 @@ main(int argc, char** argv)
       
       std::cout << "size of recbuf: " << sizeof(recbuf) << std::endl;
       std::cout << "printing tracker response buffer" << std::endl;
-      std::cout << buf << std::endl;
+      std::cout << recbuf << std::endl;
       
       ss << recbuf << std::endl;
       if (ss.str() == "close\n")
