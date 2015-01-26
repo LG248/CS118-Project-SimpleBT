@@ -219,7 +219,7 @@ main(int argc, char** argv)
 
       // parse tracker response
       sbt::TrackerResponse trackerResp;
-      sbt::bencoding::Dictionary() respDict;
+      sbt::bencoding::Dictionary respDict;
       respDict.wireDecode(ss);
       trackerResp.decode(respDict);
       
