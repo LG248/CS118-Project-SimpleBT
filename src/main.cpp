@@ -86,16 +86,8 @@ main(int argc, char** argv)
     sbt::ConstBufferPtr hashptr = metainfo.getHash();
     sbt::Buffer hashbuf1 = *hashptr;
     uint8_t* hashbuf2 = hashbuf1.buf();
-    std::string info_hash = sbt::url::encode(hashbuf2, 20); // TODO what is size?
-    std::cout << info_hash << std::endl;
-    
-    std::string info_hash1 = sbt::url::encode(hashbuf2, 10);
-    std::string info_hash2 = sbt::url::encode(hashbuf2, 15);
-    std::string info_hash3 = sbt::url::encode(hashbuf2, 20);
-
-    std::cout << info_hash1 << std::endl;
-    std::cout << info_hash2 << std::endl;
-    std::cout << info_hash3 << std::endl;
+    std::string info_hash = sbt::url::encode(hashbuf2, 20); // 20-byte encoding
+    //std::cout << info_hash << std::endl; // print info_hash
 
     
     // other params
@@ -105,7 +97,7 @@ main(int argc, char** argv)
     int64_t uploaded = 0;           // bytes uploaded, 0 to start
     int64_t downloaded = 0;         // bytes downloaded
     int64_t left = length;          // bytes left (whole file to start) TODO right?
-    std::string event = "stopped";  // "stopped", "started", "completed"
+    std::string event = "started";  // initial set to started, later remove
     
     std::string reqParams = sbt::treq::formatTrackerParams(
                                                 info_hash,

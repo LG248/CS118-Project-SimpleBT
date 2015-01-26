@@ -16,8 +16,9 @@ namespace sbt {
   namespace treq {
   
   // given params, put them together in the right format for GET path
-  // and return as string
-  // Note: you cannot omit any of the input params, or add additional params
+  // and return as string.
+  // omit event param by putting in "no_event"
+  // Note: you cannot omit any other input params, or add additional params
   //       with this function.
   std::string
   formatTrackerParams(std::string info_hash,  // urlencoded metainfo
@@ -27,7 +28,7 @@ namespace sbt {
                int64_t uploaded,   // bytes uploaded
                int64_t downloaded, // bytes downloaded
                int64_t left,       // bytes left
-               std::string event   // "stopped", "started", "completed"
+               std::string event,   // "stopped", "started", "completed", "no_event"
     );
     
 

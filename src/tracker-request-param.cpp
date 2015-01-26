@@ -15,9 +15,10 @@ formatTrackerParams(std::string info_hash, // urlencoded metainfo
                     int64_t uploaded, // bytes uploaded
                     int64_t downloaded, // bytes downloaded
                     int64_t left, // bytes left
-                    std::string event // "stopped", "started", "completed"
+                    std::string event // "stopped", "started", "completed", "no_event"
                     )
 {
+
   std::string params =
     "?info_hash=" + info_hash +
     "&peer_id=" + peer_id +
@@ -25,8 +26,11 @@ formatTrackerParams(std::string info_hash, // urlencoded metainfo
     "&port=" + std::to_string(port) +
     "&uploaded=" + std::to_string(uploaded) +
     "&downloaded=" + std::to_string(downloaded) +
-    "&left=" + std::to_string(left) +
-  "&event=" + event;
+    "&left=" + std::to_string(left)
+    //"&event=" + event;
+  
+  if (event != "no_event"):
+    params = params + "&event=" + event;
   
   return params;
 }
