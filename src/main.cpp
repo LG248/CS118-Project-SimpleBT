@@ -180,7 +180,7 @@ main(int argc, char** argv)
     
     // send/receive data to/from connection
     bool isEnd = false;
-    std::string input = metastr; // input is data to set
+    std::string input = metastr; // input is data to send
     char buf[20] = {0}; // buf holds data received
     std::stringstream ss; // buf is put into ss
     
@@ -202,15 +202,23 @@ main(int argc, char** argv)
       ss << buf << std::endl;
       if (ss.str() == "close\n")
         break;
+      // roughly end of client.cpp-based code
       
-      // parse response
+      // parse tracker response
+      //sbt::TrackerResponse resp;
+      
+      
+      /*
+      // parse HTTP response (actually need tracker response)
       sbt::HttpResponse resp;
       resp.parseResponse(buf, 20); // buffer size is 20
       size_t respSize = resp.getTotalLength();
       const std::string statusCode = resp.getStatusCode();
       const std::string statusMsg = resp.getStatusMsg();
+      std::cout << "status code and message" << std::endl;
       std::cout << statusCode << std::endl;
       std::cout << statusMsg << std::endl;
+      */
       
       ss.str(""); // clear ss (set to "")
     }
@@ -220,8 +228,8 @@ main(int argc, char** argv)
 
     
     /* TODO
-     1. (short-term) get the GET request to have all the right parts
-     2. send the GET request to the tracker
+     1. x (short-term) get the GET request to have all the right parts
+     2. x send the GET request to the tracker
      3. parse the information you get back from the tracker
      4. peer info list
      5. Do 2-4 in a while loop so client is periodically messaging tracker
