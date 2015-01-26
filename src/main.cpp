@@ -82,11 +82,13 @@ main(int argc, char** argv)
     
     /// Tracker request parameters ///
     
-    // url encode the hash
+    // url encode the info hash
     sbt::ConstBufferPtr hashptr = metainfo.getHash();
     sbt::Buffer hashbuf1 = *hashptr;
     uint8_t* hashbuf2 = hashbuf1.buf();
     std::string info_hash = sbt::url::encode(hashbuf2, 16); // TODO what is size?
+    std::cout << hashbuf2 << std::endl;
+    std::cout << info_hash << std::endl;
     
     // other params
     std::string peer_id = "somepeer";        // urlencoded peer id for client
