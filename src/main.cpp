@@ -222,7 +222,7 @@ main(int argc, char** argv)
       
 
       // parse tracker response
-      sbt::TrackerResponse resp;
+      sbt::TrackerResponse trackerResp;
       //resp.decode(bencodedResponse);
       
       // TODO check for failure
@@ -230,7 +230,7 @@ main(int argc, char** argv)
       
       
       // how long to wait before next request
-      uint64_t interval = trackResp.getInterval();
+      uint64_t interval = trackerResp.getInterval();
       
       // peer info
       sbt::PeerInfo peer_info;
