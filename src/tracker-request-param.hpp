@@ -28,7 +28,7 @@ namespace sbt {
                int64_t uploaded,   // bytes uploaded
                int64_t downloaded, // bytes downloaded
                int64_t left,       // bytes left
-               std::string event,   // "stopped", "started", "completed", "no_event"
+               std::string event   // "stopped", "started", "completed", "no_event"
     );
     
 

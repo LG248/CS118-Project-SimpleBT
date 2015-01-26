@@ -37,6 +37,6 @@ formatTrackerParams(std::string info_hash, // urlencoded metainfo
   return params;
 }
 
-  }}
+}}
 
 
