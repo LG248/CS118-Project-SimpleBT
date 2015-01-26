@@ -219,9 +219,9 @@ main(int argc, char** argv)
 
       // parse tracker response
       sbt::TrackerResponse trackerResp;
-      respDict = bencoding::Dictionary();
+      respDict = sbt::bencoding::Dictionary();
       respDict.wireDecode(ss);
-      trackerResp.decode(respDic);
+      trackerResp.decode(respDict);
       
       if (trackerResp.isFailure())       // handle failure
       {
@@ -231,7 +231,7 @@ main(int argc, char** argv)
       }
       
       uint64_t interval = trackerResp.getInterval(); // how long to wait
-      sbt::PeerInfo peer_info = trackerResp.getPeers();
+      std::vector<sbt::PeerInfo> peerVector = trackerResp.getPeers();
       
       ss.str(""); // clear ss (set to "")
       
