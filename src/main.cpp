@@ -38,7 +38,7 @@
 #include "./http/url-encoding.hpp"
 #include "./http/http-request.hpp"
 #include "tracker-response.hpp"
-//#include "./http/http-response.hpp"
+#include "./http/http-response.hpp"
 #include "tracker-request-param.hpp"
 
 
@@ -212,12 +212,23 @@ main(int argc, char** argv)
       
       // add to string stream
       ss << recbuf << std::endl;
-      if (ss.str() == "close\n")
+      if (ss.str() == "close\n") // TODO does "close" replace header or is it after header?
         break;
       // roughly end of client.cpp-based code
       
 
-      // parse tracker response
+      // parse tracker response (consists of header and bencoded dict of peers)
+      // TODO separate header from dict (using /r/n?)
+       //YYu: http-response is only for parsing http response header. The tracker-response is only for parsing the msg-body.
+      //Yyu: see W2 discussion for how to find separation between header and body
+      
+      // parse header (TODO implement)
+      sbt::HttpResponse respHeader;
+      respHeader.parseHeaders(headerBuf, someSize);
+      std::string contentLenStr = findHeader(someKeyString);
+      int contentLength = atoi(contentLenStr); //TODO int? size_t? uint64_t?
+      
+      // parse message body
       sbt::TrackerResponse trackerResp;
       sbt::bencoding::Dictionary respDict;
       respDict.wireDecode(ss);
@@ -241,17 +252,16 @@ main(int argc, char** argv)
     close(sockfd);
     
     
-    /*
-     // parse HTTP response (actually need tracker response)
-     sbt::HttpResponse resp;
-     resp.parseResponse(buf, 20); // buffer size is 20 for now?
+
+     sbt::HttpResponse respHeader;
+     resp.parseResponse(headerBuf, sizeof(headerBuf)); // idk size
      size_t respSize = resp.getTotalLength();
-     const std::string statusCode = resp.getStatusCode();
-     const std::string statusMsg = resp.getStatusMsg();
+     const std::string statusCode = respHeader.getStatusCode();
+     const std::string statusMsg = respHeader.getStatusMsg();
      std::cout << "status code and message" << std::endl;
      std::cout << statusCode << std::endl;
      std::cout << statusMsg << std::endl;
-     */
+
     
     
     /* TODO
