@@ -154,7 +154,7 @@ main(int argc, char** argv)
     // format server socket address
     struct sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(12345);     // short, network byte order
+    serverAddr.sin_port = htons(80);     // short, network byte order
     serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
     
