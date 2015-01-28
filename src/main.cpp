@@ -252,7 +252,7 @@ main(int argc, char** argv)
     close(sockfd);
     
     
-
+      /*
      sbt::HttpResponse respHeader;
      resp.parseResponse(headerBuf, sizeof(headerBuf)); // idk size
      size_t respSize = resp.getTotalLength();
@@ -261,7 +261,7 @@ main(int argc, char** argv)
      std::cout << "status code and message" << std::endl;
      std::cout << statusCode << std::endl;
      std::cout << statusMsg << std::endl;
-
+       */
     
     
     /* TODO
