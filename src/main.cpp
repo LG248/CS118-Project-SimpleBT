@@ -215,7 +215,7 @@ main(int argc, char** argv)
       if (ss.str() == "close\n") // TODO does "close" replace header or is it after header?
         break;
       // roughly end of client.cpp-based code
-      
+      /*
 
       // parse tracker response (consists of header and bencoded dict of peers)
       // TODO separate header from dict (using /r/n?)
@@ -245,7 +245,7 @@ main(int argc, char** argv)
       std::vector<sbt::PeerInfo> peerVector = trackerResp.getPeers();
       
       ss.str(""); // clear ss (set to "")
-      
+      */
       
     }
     
