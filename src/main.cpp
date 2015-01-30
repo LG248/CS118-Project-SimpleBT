@@ -83,6 +83,7 @@ main(int argc, char** argv)
     
     
     /// Tracker request parameters ///
+    // TODO refactor tracker param code with get/setter
     
     // url encode the info hash
     sbt::ConstBufferPtr hashptr = metainfo.getHash();
@@ -122,6 +123,7 @@ main(int argc, char** argv)
     std::string path = announce + reqParams;
     
     // create HTTP request
+    // TODO fix inputs for HTTP request based on reference client.cpp
     sbt::HttpRequest getReq;
     getReq.setMethod(sbt::HttpRequest::GET);
     getReq.setHost("localhost"); // TODO get from .torrent announce part, hardcode for now
@@ -215,14 +217,11 @@ main(int argc, char** argv)
       if (ss.str() == "close\n") // TODO does "close" replace header or is it after header?
         break;
       // roughly end of client.cpp-based code
-      /*
 
-      // parse tracker response (consists of header and bencoded dict of peers)
-      // TODO separate header from dict (using /r/n?)
-       //YYu: http-response is only for parsing http response header. The tracker-response is only for parsing the msg-body.
-      //Yyu: see W2 discussion for how to find separation between header and body
-      
-      // parse header (TODO implement)
+
+      /// parsing tracker response (consists of header and bencoded dict of peers)
+
+      // parse header
       sbt::HttpResponse respHeader;
       respHeader.parseHeaders(headerBuf, someSize);
       std::string contentLenStr = findHeader(someKeyString);
@@ -245,7 +244,7 @@ main(int argc, char** argv)
       std::vector<sbt::PeerInfo> peerVector = trackerResp.getPeers();
       
       ss.str(""); // clear ss (set to "")
-      */
+      
       
     }
     
