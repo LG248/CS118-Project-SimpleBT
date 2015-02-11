@@ -129,7 +129,7 @@ main(int argc, char** argv)
     getReq.setHost("localhost"); // TODO get from .torrent announce part, hardcode for now
     getReq.setPort(12345); // port of tracker TODO get from .torrent announce part, hardcode for now
     getReq.setPath(path); // all those params are in there
-    getReq.setVersion("1.0"); // or should be 1.1?
+    getReq.setVersion("1.0"); // should be 1.0 or 1.1?
     getReq.addHeader("Accept-Language", "en-US");
 
     // get HTTP request as char buffer
@@ -144,6 +144,63 @@ main(int argc, char** argv)
 
     delete [] metabuf; // delete buffer when done
     
+    /////
+    /// Send the initial request to the tracker ///
+    // Socket code modified from client.cpp posted by Yingdi Yu
+    // http://irl.cs.ucla.edu/~yingdi/cs118/proj1/client.cpp
+    
+    // create a socket using TCP IP
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    
+    // format server socket address
+    struct sockaddr_in serverAddr;
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(12345);     // short, network byte order
+    serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
+    
+    // connect to the server
+    if (connect(sockfd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1) {
+      perror("connect");
+      return 2;
+    }
+    
+    // get client address from sockfd
+    struct sockaddr_in clientAddr;
+    socklen_t clientAddrLen = sizeof(clientAddr);
+    if (getsockname(sockfd, (struct sockaddr *)&clientAddr, &clientAddrLen) == -1) {
+      perror("getsockname");
+      return 3;
+    }
+    
+    // display ipaddr as string
+    char ipstr[INET_ADDRSTRLEN] = {'\0'};
+    inet_ntop(clientAddr.sin_family, &clientAddr.sin_addr, ipstr, sizeof(ipstr));
+    std::cout << "Set up a connection from: " << ipstr << ":" <<
+    ntohs(clientAddr.sin_port) << std::endl;
+    
+    
+    // send/receive data to/from connection
+    bool isEnd = false;
+    std::string input = metastr; // input is data to send
+    //char recbuf[3000] = {0}; // buf holds data received
+    /* TODO in a while loop, keep receiving stuff from buffer and
+     adding on to the stringstream until you reach some end of file signal
+     (maybe a newline or \r\n?), or parse content length from file?
+     (not sure what max received buf size should be)
+     */
+    std::stringstream recss; // received buf is put into ss
+    
+    //while (!isEnd) {
+      memset(recbuf, '\0', sizeof(recbuf)); // null terminate buffer
+      
+      // sending
+      if (send(sockfd, input.c_str(), input.size(), 0) == -1) {
+        perror("send");
+        return 4;
+      //}
+
+    /////
     
     //////////////////////////////////////////////////////////////////////
     
@@ -170,7 +227,7 @@ main(int argc, char** argv)
         
         // read in (512 - 3) chars (skip first 3 chars)
         // res = size of buf received
-        ssize_t res = recv(m_trackerSock, buf + 3, 512 - 3, 0);
+        ssize_t res = recv(sockfd, buf + 3, 512 - 3, 0);
         
         if (res == -1) { // if error in recv
           perror("recv");
@@ -219,7 +276,7 @@ main(int argc, char** argv)
           break;
       }
       
-      close(m_trackerSock);
+      close(sockfd);
       FD_CLR(m_trackerSock, &m_readSocks);
       
       /// parse tracker response and get interval
