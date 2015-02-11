@@ -20,7 +20,6 @@
  * \author LG248
  */
 
-// includes from client.cpp
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -29,6 +28,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <unistd.h>
+#include <boost/lexical_cast.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -54,7 +54,7 @@ main(int argc, char** argv)
       return 1;
     }
 
-    // Initialise the client.
+    // Initialise the client. TODO client doesn't do shit atm
     sbt::Client client(argv[1], argv[2]);
 
     
@@ -140,147 +140,117 @@ main(int argc, char** argv)
     
     // these just convert GET request buf to string and print
     std::string metastr = metabuf;
-    std::cout << metastr << std::endl;
+    std::cout << "~~ http request ~~\n" << metastr << std::endl;
 
     delete [] metabuf; // delete buffer when done
     
     
+    //////////////////////////////////////////////////////////////////////
     
-    /// Send the initial request to the tracker ///
-    // Socket code modified from client.cpp posted by Yingdi Yu
-    // http://irl.cs.ucla.edu/~yingdi/cs118/proj1/client.cpp
+    //void
+    //Client::recvTrackerResponse()
+    //{
+    bool m_isFirstRes = true;
     
-    // create a socket using TCP IP
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    
-    // format server socket address
-    struct sockaddr_in serverAddr;
-    serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(80);     // short, network byte order
-    serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
-    
-    // connect to the server
-    if (connect(sockfd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1) {
-      perror("connect");
-      return 2;
-    }
-    
-    // get client address from sockfd
-    struct sockaddr_in clientAddr;
-    socklen_t clientAddrLen = sizeof(clientAddr);
-    if (getsockname(sockfd, (struct sockaddr *)&clientAddr, &clientAddrLen) == -1) {
-      perror("getsockname");
-      return 3;
-    }
-    
-    // display ipaddr as string
-    char ipstr[INET_ADDRSTRLEN] = {'\0'};
-    inet_ntop(clientAddr.sin_family, &clientAddr.sin_addr, ipstr, sizeof(ipstr));
-    std::cout << "Set up a connection from: " << ipstr << ":" <<
-    ntohs(clientAddr.sin_port) << std::endl;
-    
-    
-    // send/receive data to/from connection
-    bool isEnd = false;
-    std::string input = metastr; // input is data to send
-    char recbuf[3000] = {0}; // buf holds data received
-    /* TODO in a while loop, keep receiving stuff from buffer and 
-       adding on to the stringstream until you reach some end of file signal
-        (maybe a newline or \r\n?), or parse content length from file?
-       (not sure what max received buf size should be)
-     */
-    std::stringstream ss; // buf is put into ss
-    
-    while (!isEnd) {
-      memset(recbuf, '\0', sizeof(recbuf)); // null terminate buffer
+      std::stringstream headerOs;
+      std::stringstream bodyOs;
       
-      // sending
-      if (send(sockfd, input.c_str(), input.size(), 0) == -1) {
-        perror("send");
-        return 4;
+      char buf[512] = {0};          // read in 512 chars at a time
+      char lastTree[3] = {0};       // ??? (print out buf to figure out what it is)
+      
+      bool hasEnd = false;          // did you get a message saying to close?
+      bool hasParseHeader = false;  // has header been parsed into HttpResponse obj response?
+      HttpResponse response;
+      
+      uint64_t bodyLength = 0;
+      
+      while (true) {
+        memset(buf, '\0', sizeof(buf)); // null-terminate buffer
+        memcpy(buf, lastTree, 3);       // set first three chars of buf to lastTree
+        
+        // read in (512 - 3) chars (skip first 3 chars)
+        // res = size of buf received
+        ssize_t res = recv(m_trackerSock, buf + 3, 512 - 3, 0);
+        
+        if (res == -1) { // if error in recv
+          perror("recv");
+          return;
+        }
+        
+        const char* endline = 0; // will point to end of header
+        
+        if (!hasEnd) {            // if end not found
+          // memmem finds first occurance of "\r\n\r\n" (len 4) in buf
+          endline = (const char*)memmem(buf, res, "\r\n\r\n", 4);
+        }
+        
+        if (endline != 0) {      // if rnrn is found
+          const char* headerEnd = endline + 4; // end of header after "\r\n\r\n"
+          
+          headerOs.write(buf + 3, (endline + 4 - buf - 3)); // write to ss, skipping lastTree
+          
+          if (headerEnd < (buf + 3 + res)) { // if headerEnd extends beyond end of http header
+            bodyOs.write(headerEnd, (buf + 3 + res - headerEnd)); // write remainder to body
+          }
+          
+          hasEnd = true;
+        }
+        
+        else { // if rnrn not part of buf
+          if (!hasEnd) { // if not yet at end of header (rnrn)
+            memcpy(lastTree, buf + res, 3); // set lastTree to first 3 chars after buf
+            headerOs.write(buf + 3, res);   // write header to ss
+          }
+          else // if done with header, write body
+            bodyOs.write(buf + 3, res);
+        }
+        
+        if (hasEnd) { // if at end of header
+          if (!hasParseHeader) { // if header not parsed (put into http response object)
+            response.parseResponse(headerOs.str().c_str(), headerOs.str().size());
+            hasParseHeader = true;
+            
+            bodyLength = boost::lexical_cast<uint64_t>(response.findHeader("Content-Length"));
+          }
+        }
+        
+        // if header is parsed and body0s contains full body, done with recv
+        if (hasParseHeader && bodyOs.str().size() >= bodyLength)
+          break;
       }
       
-      // receiving
-      if (recv(sockfd, recbuf, sizeof(recbuf), 0) == -1) {
-        perror("recv");
-        return 5;
+      close(m_trackerSock);
+      FD_CLR(m_trackerSock, &m_readSocks);
+      
+      /// parse tracker response and get interval
+  
+      // convert body0s to ss, then wireDecode into dict
+      bencoding::Dictionary dict;
+      std::stringstream tss;
+      tss.str(bodyOs.str());
+      dict.wireDecode(tss);
+    
+    
+    std::cout << tss << std::endl;
+    
+      // get interval and peers
+      TrackerResponse trackerResponse;
+      trackerResponse.decode(dict);
+      const std::vector<PeerInfo>& peers = trackerResponse.getPeers();
+      m_interval = trackerResponse.getInterval();
+      
+      // print out peer info for first response only
+      if (m_isFirstRes) {
+        for (const auto& peer : peers) {
+          std::cout << peer.ip << ":" << peer.port << std::endl;
+        }
       }
       
-      // print out the recbuf
-      std::cout << "size of recbuf: " << sizeof(recbuf) << std::endl;
-      std::cout << "printing tracker response buffer" << std::endl;
-      std::cout << recbuf << std::endl;
-      
-      // add to string stream
-      ss << recbuf << std::endl;
-      if (ss.str() == "close\n") // TODO does "close" replace header or is it after header?
-        break;
-      // roughly end of client.cpp-based code
+      m_isFirstRes = false;
+    //}
 
-
-      /// parsing tracker response (consists of header and bencoded dict of peers)
-
-      // parse header
-      sbt::HttpResponse respHeader;
-      respHeader.parseHeaders(headerBuf, someSize);
-      std::string contentLenStr = findHeader(someKeyString);
-      int contentLength = atoi(contentLenStr); //TODO int? size_t? uint64_t?
-      
-      // parse message body
-      sbt::TrackerResponse trackerResp;
-      sbt::bencoding::Dictionary respDict;
-      respDict.wireDecode(ss);
-      trackerResp.decode(respDict);
-      
-      if (trackerResp.isFailure())       // handle failure
-      {
-        std::cerr << "Tracker failure:" << std::endl;
-        std::cerr << trackerResp.getFailure() << std::endl;
-        break; // TODO figure out what failure indicates and if you should return
-      }
-      
-      uint64_t interval = trackerResp.getInterval(); // how long to wait
-      std::vector<sbt::PeerInfo> peerVector = trackerResp.getPeers();
-      
-      ss.str(""); // clear ss (set to "")
-      
-      
-    }
     
-    close(sockfd);
+    ////////////////////////////////////////////////////
     
-    
-      /*
-     sbt::HttpResponse respHeader;
-     resp.parseResponse(headerBuf, sizeof(headerBuf)); // idk size
-     size_t respSize = resp.getTotalLength();
-     const std::string statusCode = respHeader.getStatusCode();
-     const std::string statusMsg = respHeader.getStatusMsg();
-     std::cout << "status code and message" << std::endl;
-     std::cout << statusCode << std::endl;
-     std::cout << statusMsg << std::endl;
-       */
-    
-    
-    /* TODO
-     1. x (short-term) get the GET request to have all the right parts
-     2. x send the GET request to the tracker
-     2.5. get info back from the tracker (TODO figure out buffer size)
-     3. parse the information you get back from the tracker
-     4. peer info list
-     5. Do 2-4 in a while loop so client is periodically messaging tracker
-     */
-    
-    
-    /// Get peer list and print ///
-    return 0;
-    
-  }
-  catch (std::exception& e)
-  {
-    std::cerr << "exception: " << e.what() << "\n";
-  }
-
   return 0;
 }
