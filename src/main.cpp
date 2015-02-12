@@ -44,7 +44,6 @@
 
 /*
  TODO
- 0) pass test 4 (started must be the first req)
  1) separate out code with comment blocks (equiv to functions)
  2) figure out what lastTree is and whether to get rid of it/merge it
  3) refactor ref client.cpp code to liking, and tidy up rest
@@ -92,7 +91,7 @@ main(int argc, char** argv)
     
     //// Get metainfo
     
-    // ppen .torrent file and decode
+    // open .torrent file and decode
     std::fstream metaFile;
     metaFile.open(argv[2], std::fstream::in);
     if (metaFile == NULL)
@@ -106,28 +105,33 @@ main(int argc, char** argv)
     metainfo.wireDecode(metaFile);
     metaFile.close();
     
-    // Get announce and info fields
+    // announce and info fields
     std::string announce = metainfo.getAnnounce(); // announce URL of tracker
     //int64_t pieceLength = metainfo.getPieceLength(); // number of pieces
     //std::vector<uint8_t> pieces = metainfo.getPieces(); // concatenated 20-byte SHA1 hash values
-    //std::string name = metainfo.getName(); // file name
+    //std::string file = metainfo.getName(); // file to torrent
     int64_t length = metainfo.getLength(); // length of file
     
+    std::cout << announce << std::endl;
+    std::string trackerHost;
+    std::string trackerPort;
     
-    while (true) { // TODO what is the break condition? which part loops?
+  while (true) { // TODO what is the break condition? when does event = closed?
   
-    //// Tracker request parameters (part of sending tracker req)
+    //// SEND TRACKER REQUEST
+    // - client sends request for peer info from tracker
+    // - client reports metainfo (info_hash, ip, etc) and status (uploaded, etc)
     
+    
+    // Create tracker request
+      
     // url encode the info hash
     sbt::ConstBufferPtr hashptr = metainfo.getHash();
     sbt::Buffer hashbuf1 = *hashptr;
     uint8_t* hashbuf2 = hashbuf1.buf();
     std::string info_hash = sbt::url::encode(hashbuf2, 20); // 20-byte encoding
-    //std::cout << info_hash << std::endl; // print info_hash
-
     
-    // other params
-    // TODO implement in part 2
+    // set other params
     std::string peer_id = "somepeer";        // urlencoded peer id for client
     std::string ip_str = "127.0.0.1";        // ip of client machine
     int port = std::atoi(argv[1]);  // port number for peer communication
@@ -141,6 +145,7 @@ main(int argc, char** argv)
       isFirstReq = false;
     }
     
+    // format params
     std::string reqParams = sbt::treq::formatTrackerParams(
                                                 info_hash,
                                                 peer_id,
@@ -150,36 +155,27 @@ main(int argc, char** argv)
                                                 downloaded,
                                                 left,
                                                 event);
- 
-    
-    // Send HTTP GET request to send/receive the following info:
-    // - client requests peer info from tracker
-    // - client reports meta info to tracker (info_hash, ip, port, event)
-    // - client reports status to tracker (uploaded, downloaded, left)
     
 
-    //// Send tracker request
+    // send tracker request
     // create path (tracker url, also encodes meta info and status)
     std::string path = announce + reqParams;
     
-    // create HTTP request
-    // TODO fix inputs for HTTP request based on reference client.cpp instead of hardcoding
+    // create HTTP request with right settings
     sbt::HttpRequest getReq;
     getReq.setMethod(sbt::HttpRequest::GET);
-    getReq.setHost("localhost"); // TODO get from .torrent announce part, hardcode for now
-    getReq.setPort(12345); // port of tracker TODO get from .torrent announce part, hardcode for now
+    getReq.setHost(trackerHost); //
+    getReq.setPort(trackerPort); // the port from .torrent
     getReq.setPath(path); // all those params are in there
     getReq.setVersion("1.0"); // should be 1.0 or 1.1?
     getReq.addHeader("Accept-Language", "en-US");
 
-    // get HTTP request as char buffer
+    // convert HTTP request to char buf, then to string
     size_t reqLen = getReq.getTotalLength();
     char *reqBuf = new char [reqLen];
     getReq.formatRequest(reqBuf);
-    //std::cout << reqBuf << std::endl; // TODO do stuff with the char buffer
-    
-    // put GET request as a string and print
     std::string reqStr = reqBuf;
+    //std::cout << "~~ http request ~~\n" << reqBuf << "\n\n" << std::endl;
     //std::cout << "~~ http request ~~\n" << reqStr << "\n\n" << std::endl;
 
     delete [] reqBuf; // delete buffer when done
