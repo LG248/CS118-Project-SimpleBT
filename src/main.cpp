@@ -125,10 +125,10 @@ main(int argc, char** argv)
     int colonPos = announce.find(':', hostStartPos);
     int slashPos = announce.find('/', hostStartPos);
     
-    std::string trackerHost = announce.substr(hostStartPos, colonPos);
-    std::string trackerPortStr = announce.substr(colonPos+1, slashPos);
+    std::string trackerHost = announce.substr(hostStartPos, 17);
+    std::string trackerPortStr = announce.substr(colonPos+1, 23);
     //std::cout << "announceAfter: " << announceAfter << std::endl;
-    std::cout << "colonPos, slashPos: " << colonPos << ", " << slashPos << std::endl;
+    std::cout << "hostStartPos, colonPos, slashPos: " << hostStartPos << ", " << colonPos << ", " << slashPos << std::endl;
     std::cout << "host and port: " << trackerHost << ", " << trackerPortStr << std:: endl;
     
     uint16_t trackerPort = boost::lexical_cast<uint16_t>(trackerPortStr);
