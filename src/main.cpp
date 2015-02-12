@@ -153,7 +153,6 @@ main(int argc, char** argv)
     // http://irl.cs.ucla.edu/~yingdi/cs118/proj1/client.cpp
     
     
-    while (true) { // TODO what is the break condition?
     // create a socket using TCP IP
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     
@@ -164,6 +163,9 @@ main(int argc, char** argv)
     serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
     
+    
+  while (true) { // TODO what is the break condition? which part loops?
+
     std::cout << "~~ about to try connecting ~~\n\n" << std::endl;
     
     // connect to the server
