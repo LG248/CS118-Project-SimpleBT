@@ -127,10 +127,12 @@ main(int argc, char** argv)
     
     std::string trackerHost = announceAfter.substr(hostStartPos, colonPos);
     std::string trackerPortStr = announceAfter.substr(colonPos+1, slashPos);
-    uint16_t trackerPort = boost::lexical_cast<uint16_t>(trackerPortStr);
     
     std::cout << "host and port: " << trackerHost << ", " << trackerPortStr << std:: endl;
     
+    uint16_t trackerPort = boost::lexical_cast<uint16_t>(trackerPortStr);
+    
+
     
   while (true) { // TODO what is the break condition? when does event = closed?
   
