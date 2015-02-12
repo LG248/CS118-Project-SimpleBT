@@ -177,7 +177,7 @@ main(int argc, char** argv)
     
     // put GET request as a string and print
     std::string reqStr = reqBuf;
-    //std::cout << "~~ http request ~~\n" << reqStr << "\n\n" << std::endl;
+    std::cout << "~~ http request ~~\n" << reqStr << "\n\n" << std::endl;
 
     delete [] reqBuf; // delete buffer when done
     
@@ -312,7 +312,6 @@ main(int argc, char** argv)
         break;
     }
     
-    delete [] recvBuf;
     close(sockfd);
     fd_set m_readSocks; // taken from data member of client.hpp
 
