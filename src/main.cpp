@@ -284,12 +284,14 @@ main(int argc, char** argv)
     }
     
     close(sockfd);
-    FD_CLR(m_trackerSock, &m_readSocks);
+    fd_set m_readSocks; // taken from data member of client.hpp
+
+    FD_CLR(sockfd, &m_readSocks);
     
     /// parse tracker response and get interval
 
     // convert body0s to ss, then wireDecode into dict
-    bencoding::Dictionary dict;
+    sbt::bencoding::Dictionary dict;
     std::stringstream tss;
     tss.str(bodyOs.str());
     dict.wireDecode(tss);
