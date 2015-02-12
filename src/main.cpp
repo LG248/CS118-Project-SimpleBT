@@ -134,10 +134,11 @@ main(int argc, char** argv)
     std::string event = "no_event"; // indicates to leave event out of req
     
     if (isFirstReq){
-      std::cout << "~~ is first req ~~" << std::endl;
       event = "started";
       isFirstReq = false;
     }
+    std::cout << "~~ event is: " << event << std::endl;
+
     
     std::string reqParams = sbt::treq::formatTrackerParams(
                                                 info_hash,
