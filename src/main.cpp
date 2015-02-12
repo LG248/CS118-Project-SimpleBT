@@ -114,7 +114,7 @@ main(int argc, char** argv)
     
     std::cout << announce << std::endl;
     std::string trackerHost = "local host";
-    std::string trackerPort = boost::lexical_cast<uint16_t>("12345");
+    uint16_t trackerPort = boost::lexical_cast<uint16_t>("12345");
     
   while (true) { // TODO what is the break condition? when does event = closed?
   
