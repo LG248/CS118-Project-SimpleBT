@@ -130,9 +130,8 @@ main(int argc, char** argv)
     int64_t uploaded = 0;           // bytes uploaded, 0 to start
     int64_t downloaded = 0;         // bytes downloaded
     int64_t left = length;          // bytes left (whole file to start) TODO right?
-    //std::string event = "no_event"; // indicates to leave event out of req
-    std::string event = "started"; // ref code sets to started with first req, then leaves as started
-
+    std::string event = "no_event"; // indicates to leave event out of req
+    
     if (isFirstReq){
       event = "started";
       isFirstReq = false;
@@ -233,9 +232,9 @@ main(int argc, char** argv)
     
     
     // received data will be stored in buffer and ss
-    char recvBuf[1000] = {0}; // buf holds data received
-    std::stringstream recvss; // received buf is put into recss
-    memset(recvBuf, '\0', sizeof(recvBuf)); // null terminate buffer
+    //char recvBuf[1000] = {0}; // buf holds data received, TODO delete [] it
+    //std::stringstream recvss; // received buf is put into recss
+    //memset(recvBuf, '\0', sizeof(recvBuf)); // null terminate buffer
     
     ///// end orig sending code
     
@@ -249,7 +248,7 @@ main(int argc, char** argv)
     std::stringstream headerOs;
     std::stringstream bodyOs;
       
-    char buf[512] = {0};          // read in 512 chars at a time
+    char recvBuf[512] = {0};          // read in 512 chars at a time
     char lastTree[3] = {0};       // ??? (print out buf to figure out what it is)
       
     bool hasEnd = false;          // did you get a message saying to close?
@@ -259,12 +258,12 @@ main(int argc, char** argv)
     uint64_t bodyLength = 0;
     
     while (true) {
-      memset(buf, '\0', sizeof(buf)); // null-terminate buffer
-      memcpy(buf, lastTree, 3);       // set first three chars of buf to lastTree
+      memset(recvBuf, '\0', sizeof(recvBuf)); // null-terminate buffer
+      memcpy(recvBuf, lastTree, 3);       // set first three chars of buf to lastTree
       
       // read in (512 - 3) chars (skip first 3 chars)
       // res = size of buf received
-      ssize_t res = recv(sockfd, buf + 3, 512 - 3, 0);
+      ssize_t res = recv(sockfd, recvBuf + 3, 512 - 3, 0);
       
       if (res == -1) { // if error in recv
         perror("recv");
@@ -275,16 +274,16 @@ main(int argc, char** argv)
       
       if (!hasEnd) {            // if end not found
         // memmem finds first occurance of "\r\n\r\n" (len 4) in buf
-        endline = (const char*)memmem(buf, res, "\r\n\r\n", 4);
+        endline = (const char*)memmem(recvBuf, res, "\r\n\r\n", 4);
       }
       
       if (endline != 0) {      // if rnrn is found
         const char* headerEnd = endline + 4; // end of header after "\r\n\r\n"
         
-        headerOs.write(buf + 3, (endline + 4 - buf - 3)); // write to ss, skipping lastTree
+        headerOs.write(recvBuf + 3, (endline + 4 - recvBuf - 3)); // write to ss, skipping lastTree
         
-        if (headerEnd < (buf + 3 + res)) { // if headerEnd extends beyond end of http header
-          bodyOs.write(headerEnd, (buf + 3 + res - headerEnd)); // write remainder to body
+        if (headerEnd < (recvBuf + 3 + res)) { // if headerEnd extends beyond end of http header
+          bodyOs.write(headerEnd, (recvBuf + 3 + res - headerEnd)); // write remainder to body
         }
         
         hasEnd = true;
@@ -292,11 +291,11 @@ main(int argc, char** argv)
       
       else { // if rnrn not part of buf
         if (!hasEnd) { // if not yet at end of header (rnrn)
-          memcpy(lastTree, buf + res, 3); // set lastTree to first 3 chars after buf
-          headerOs.write(buf + 3, res);   // write header to ss
+          memcpy(lastTree, recvBuf + res, 3); // set lastTree to first 3 chars after buf
+          headerOs.write(recvBuf + 3, res);   // write header to ss
         }
         else // if done with header, write body
-          bodyOs.write(buf + 3, res);
+          bodyOs.write(recvBuf + 3, res);
       }
       
       if (hasEnd) { // if at end of header
@@ -313,6 +312,7 @@ main(int argc, char** argv)
         break;
     }
     
+    delete [] recvBuf;
     close(sockfd);
     fd_set m_readSocks; // taken from data member of client.hpp
 
