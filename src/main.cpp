@@ -112,8 +112,10 @@ main(int argc, char** argv)
     //std::string name = metainfo.getName(); // file name
     int64_t length = metainfo.getLength(); // length of file
     
+    
+    while (true) { // TODO what is the break condition? which part loops?
   
-    /// Tracker request parameters
+    //// Tracker request parameters (part of sending tracker req)
     
     // url encode the info hash
     sbt::ConstBufferPtr hashptr = metainfo.getHash();
@@ -137,6 +139,7 @@ main(int argc, char** argv)
       event = "started";
       isFirstReq = false;
     }
+    
     std::cout << "~~ event is: " << event << std::endl;
 
     
@@ -156,7 +159,6 @@ main(int argc, char** argv)
     // - client reports meta info to tracker (info_hash, ip, port, event)
     // - client reports status to tracker (uploaded, downloaded, left)
     
-    while (true) { // TODO what is the break condition? which part loops?
 
     //// Send tracker request
     // create path (tracker url, also encodes meta info and status)
