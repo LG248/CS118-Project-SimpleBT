@@ -42,6 +42,16 @@
 #include "tracker-request-param.hpp"
 
 
+/*
+ TODO
+ 0) initialize variables (equiv to data members)
+ 1) separate out code with comment blocks (equiv to functions)
+ 2) using (1), separate out while loop from non-while loop stuff (equiv to constructor vs run())
+ 3) use isFirstReq and isFirstResponse
+ */
+
+
+
 int
 main(int argc, char** argv)
 {
@@ -55,12 +65,35 @@ main(int argc, char** argv)
     }
 
     // Initialise the client. TODO client doesn't do shit atm
-    sbt::Client client(argv[1], argv[2]);
+    //sbt::Client client(argv[1], argv[2]);
+    
+    //// Initialize useful variables
+    
+    /* 
+     // parsing metainfo vars
+    sbt::MetaInfo metainfo; // holds info from .torrent file
+    std::string host; // tracker host to use in GET request to tracker ("localhost")
+    std::string port; // tracker port (12345), currently an int in my code
+    std::string file; // don't think i need since we do single file mode 
+     */
+    
+    uint16_t clientPort;
+    
+    bool isFirstReq = true; // only need event param for first
+    bool isFirstResponse = true; // idk what for yet
+    
+    int sockfd; // equiv to trackerSock in ref code
+    int serverSock = -1; // for part 2?
+    
+    fd_set readSocks; // only used in FD_CLR(sockfd, &readSocks), which just removes sockfd from the readSocks set. not sure if needed.
+    
+    uint64_t interval; // eyyy
 
     
-    /// Parse torrent file ///
     
-    // Open .torrent file and decode
+    //// Get metainfo
+    
+    // ppen .torrent file and decode
     std::fstream metaFile;
     metaFile.open(argv[2], std::fstream::in);
     if (metaFile == NULL)
@@ -69,8 +102,6 @@ main(int argc, char** argv)
       std::cerr << "Usage: simple-bt <port> <torrent_file>\n";
       return 1;
     }
-    
-    std::cout << "~~ opened file, about to parse ~~" << std::endl;
     
     sbt::MetaInfo metainfo;
     metainfo.wireDecode(metaFile);
@@ -83,9 +114,8 @@ main(int argc, char** argv)
     //std::string name = metainfo.getName(); // file name
     int64_t length = metainfo.getLength(); // length of file
     
-    
-    /// Tracker request parameters ///
-    // TODO refactor tracker param code with get/setter
+  
+    /// Tracker request parameters
     
     // url encode the info hash
     sbt::ConstBufferPtr hashptr = metainfo.getHash();
@@ -102,7 +132,11 @@ main(int argc, char** argv)
     int64_t uploaded = 0;           // bytes uploaded, 0 to start
     int64_t downloaded = 0;         // bytes downloaded
     int64_t left = length;          // bytes left (whole file to start) TODO right?
-    std::string event = "started";  // initial set to started, later remove
+    std::string event = "no_event"; // indicates to leave event out of req
+    if (isFirstReq){
+      event = "started";
+      isFirstReq = false;
+    }
     
     std::string reqParams = sbt::treq::formatTrackerParams(
                                                 info_hash,
@@ -114,18 +148,20 @@ main(int argc, char** argv)
                                                 left,
                                                 event);
  
-    /// Make tracker request ///
     
     // Send HTTP GET request to send/receive the following info:
     // - client requests peer info from tracker
     // - client reports meta info to tracker (info_hash, ip, port, event)
-    // - client reports status to tracker (uploaded, downloaded, lef)
+    // - client reports status to tracker (uploaded, downloaded, left)
     
+    while (true) { // TODO what is the break condition? which part loops?
+
+    //// Send tracker request
     // create path (tracker url, also encodes meta info and status)
     std::string path = announce + reqParams;
     
     // create HTTP request
-    // TODO fix inputs for HTTP request based on reference client.cpp
+    // TODO fix inputs for HTTP request based on reference client.cpp instead of hardcoding
     sbt::HttpRequest getReq;
     getReq.setMethod(sbt::HttpRequest::GET);
     getReq.setHost("localhost"); // TODO get from .torrent announce part, hardcode for now
@@ -136,27 +172,26 @@ main(int argc, char** argv)
 
     // get HTTP request as char buffer
     size_t reqLen = getReq.getTotalLength();
-    char *metabuf = new char [reqLen];
-    getReq.formatRequest(metabuf);
-    std::cout << metabuf << std::endl; // TODO do stuff with the char buffer
+    char *reqBuf = new char [reqLen];
+    getReq.formatRequest(metaBuf);
+    std::cout << reqBuf << std::endl; // TODO do stuff with the char buffer
     
-    // these just convert GET request buf to string and print
-    std::string metastr = metabuf;
-    std::cout << "~~ http request ~~\n" << metastr << "\n\n" << std::endl;
+    // put GET request as a string and print
+    std::string reqStr = reqBuf;
+    std::cout << "~~ http request ~~\n" << reqStr << "\n\n" << std::endl;
 
-    delete [] metabuf; // delete buffer when done
+    delete [] reqBuf; // delete buffer when done
     
     ///// start orig request sending code (also in client.cpp)
-    // TODO why is connection refused? print everything. idk why it doesn't work now.
+
     /// Send the initial request to the tracker ///
-    // Socket code modified from client.cpp posted by Yingdi Yu
-    // http://irl.cs.ucla.edu/~yingdi/cs118/proj1/client.cpp
     
     
-    // create a socket using TCP IP
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    //// Connect tracker
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0); // uses TCP IP
     
-    // format server socket address
+    // format server socket address (not yet used?)
+    // TODO don't hardcode calues
     struct sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(12345);     // short, network byte order
@@ -164,7 +199,6 @@ main(int argc, char** argv)
     memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
     
     
-  while (true) { // TODO what is the break condition? which part loops?
 
     std::cout << "~~ about to try connecting ~~\n\n" << std::endl;
     
@@ -176,6 +210,7 @@ main(int argc, char** argv)
     
     std::cout << "~~ about to get client id ~~\n\n" << std::endl;
     
+    // TODO clientAddr and ipAddr not used yet
     // get client address from sockfd
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLen = sizeof(clientAddr);
@@ -191,30 +226,23 @@ main(int argc, char** argv)
     ntohs(clientAddr.sin_port) << std::endl;
     
     
-    // send/receive data to/from connection
-    bool isEnd = false;
-    std::string input = metastr; // input is data to send
-    char recbuf[3000] = {0}; // buf holds data received
-    /* TODO in a while loop, keep receiving stuff from buffer and
-     adding on to the stringstream until you reach some end of file signal
-     (maybe a newline or \r\n?), or parse content length from file?
-     (not sure what max received buf size should be)
-     */
-    std::stringstream recss; // received buf is put into ss
-    
-    //while (!isEnd) {
-      memset(recbuf, '\0', sizeof(recbuf)); // null terminate buffer
-      
-      // sending
-      if (send(sockfd, input.c_str(), input.size(), 0) == -1) {
-        perror("send");
-        return 4;
-      }
+    // actual sending (recall metastr is full size, can send all at once)
+    if (send(sockfd, reqStr.c_str(), reqStr.size(), 0) == -1) {
+      perror("send");
+      return 4;
+    }
 
+    
+    
+    // received data will be stored in buffer and ss
+    char recvBuf[1000] = {0}; // buf holds data received
+    std::stringstream recvss; // received buf is put into recss
+    memset(recvBuf, '\0', sizeof(recvBuf)); // null terminate buffer
+    
     ///// end orig sending code
     
     //////////////////////////////////////////////////////////////////////
-    
+    //// Receive response from tracker
     //void
     //Client::recvTrackerResponse()
     //{
@@ -312,17 +340,19 @@ main(int argc, char** argv)
     std::cout << "interval: " << m_interval << std::endl;
         
     // print out peer info for first response only
-    if (m_isFirstRes) {
+    if (isFirstResponse) {
       for (const auto& peer : peers) {
         std::cout << peer.ip << ":" << peer.port << std::endl;
       }
     }
     
-    m_isFirstRes = false;
+    isFirstResponse = false;
   //}
 
   //////////////////////////////////////////////////// end ref client.cpp code
-      sleep(m_interval); // wait for interval before sending next request
+    // wait for interval before sending next request
+    close(sockfd);
+    sleep(m_interval);
   }// end while(true)
   } // end try
     
