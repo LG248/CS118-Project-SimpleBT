@@ -121,13 +121,13 @@ main(int argc, char** argv)
       hostStartPos = 8;
     }
     
-    std::string announceAfter = announce.substr(hostStartPos); // after "http://"
+    //std::string announceAfter = announce.substr(hostStartPos); // after "http://"
     int colonPos = announce.find(':', hostStartPos);
     int slashPos = announce.find('/', hostStartPos);
     
     std::string trackerHost = announce.substr(hostStartPos, colonPos);
     std::string trackerPortStr = announce.substr(colonPos+1, slashPos);
-    std::cout << "announceAfter: " << announceAfter << std::endl;
+    //std::cout << "announceAfter: " << announceAfter << std::endl;
     std::cout << "colonPos, slashPos: " << colonPos << ", " << slashPos << std::endl;
     std::cout << "host and port: " << trackerHost << ", " << trackerPortStr << std:: endl;
     
