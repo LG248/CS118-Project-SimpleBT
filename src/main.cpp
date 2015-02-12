@@ -44,6 +44,7 @@
 
 /*
  TODO
+ 0) pass test 4 (started must be the first req)
  1) separate out code with comment blocks (equiv to functions)
  2) refactor/trim unnecessary code. figure out what lastTree is
  */
@@ -129,7 +130,9 @@ main(int argc, char** argv)
     int64_t uploaded = 0;           // bytes uploaded, 0 to start
     int64_t downloaded = 0;         // bytes downloaded
     int64_t left = length;          // bytes left (whole file to start) TODO right?
-    std::string event = "no_event"; // indicates to leave event out of req
+    //std::string event = "no_event"; // indicates to leave event out of req
+    std::string event = "started"; // ref code sets to started with first req, then leaves as started
+
     if (isFirstReq){
       event = "started";
       isFirstReq = false;
