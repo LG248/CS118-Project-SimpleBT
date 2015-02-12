@@ -162,7 +162,7 @@ main(int argc, char** argv)
     serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
     
-    std::cout << "~~ about to try connecting ~~\n\n" << std::cout
+    std::cout << "~~ about to try connecting ~~\n\n" << std::endl;
     
     // connect to the server
     if (connect(sockfd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1) {
@@ -170,7 +170,7 @@ main(int argc, char** argv)
       return 2;
     }
     
-    std::cout << "~~ about to get client id ~~\n\n" << std::cout
+    std::cout << "~~ about to get client id ~~\n\n" << std::endl;
     
     // get client address from sockfd
     struct sockaddr_in clientAddr;
@@ -295,7 +295,7 @@ main(int argc, char** argv)
       dict.wireDecode(tss);
     
     
-    std::cout << tss << std::endl;
+      std::cout << tss << std::endl;
     
       // get interval and peers
       TrackerResponse trackerResponse;
