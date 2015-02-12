@@ -123,7 +123,7 @@ main(int argc, char** argv)
     
     std::string announceAfter = announce.substr(hostStartPos); // after "http://"
     int colonPos = announceAfter.find(':');
-    int slashPos = announceAfter.find('/');
+    int slashPos = announceAfter.find("/");
     
     std::string trackerHost = announceAfter.substr(0, colonPos);
     std::string trackerPortStr = announceAfter.substr(colonPos+1, slashPos);
