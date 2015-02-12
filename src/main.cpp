@@ -78,7 +78,7 @@ main(int argc, char** argv)
      */
     
     uint16_t clientPort;
-    
+
     bool isFirstReq = true; // only need event param for first
     bool isFirstResponse = true; // idk what for yet
     
@@ -88,7 +88,6 @@ main(int argc, char** argv)
     //fd_set readSocks; // only used in FD_CLR(sockfd, &readSocks), which just removes sockfd from the readSocks set. not sure if needed.
     
     //uint64_t interval; // eyyy, already init inside while(true)
-
     
     
     //// Get metainfo
