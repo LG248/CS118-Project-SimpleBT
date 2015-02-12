@@ -300,10 +300,10 @@ main(int argc, char** argv)
     std::cout << tss << std::endl;
   
     // get interval and peers
-    TrackerResponse trackerResponse;
+    sbt::TrackerResponse trackerResponse;
     trackerResponse.decode(dict);
-    const std::vector<PeerInfo>& peers = trackerResponse.getPeers();
-    m_interval = trackerResponse.getInterval();
+    const std::vector<sbt::PeerInfo>& peers = trackerResponse.getPeers();
+    uint64_t m_interval = trackerResponse.getInterval();
     
     // print out peer info for first response only
     if (m_isFirstRes) {
