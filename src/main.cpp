@@ -140,9 +140,6 @@ main(int argc, char** argv)
       isFirstReq = false;
     }
     
-    std::cout << "~~ event is: " << event << std::endl;
-
-    
     std::string reqParams = sbt::treq::formatTrackerParams(
                                                 info_hash,
                                                 peer_id,
