@@ -152,6 +152,8 @@ main(int argc, char** argv)
     // Socket code modified from client.cpp posted by Yingdi Yu
     // http://irl.cs.ucla.edu/~yingdi/cs118/proj1/client.cpp
     
+    
+    while (true) { // TODO what is the break condition?
     // create a socket using TCP IP
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     
@@ -317,8 +319,9 @@ main(int argc, char** argv)
     m_isFirstRes = false;
   //}
 
-    
   //////////////////////////////////////////////////// end ref client.cpp code
+      sleep(m_interval); // wait for interval before sending next request
+  }// end while(true)
   } // end try
     
   catch (std::exception& e)
