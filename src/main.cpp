@@ -124,12 +124,13 @@ main(int argc, char** argv)
 
     
     // other params
+    // TODO implement in part 2
     std::string peer_id = "somepeer";        // urlencoded peer id for client
     std::string ip_str = "127.0.0.1";        // ip of client machine
     int port = std::atoi(argv[1]);  // port number for peer communication
     int64_t uploaded = 0;           // bytes uploaded, 0 to start
     int64_t downloaded = 0;         // bytes downloaded
-    int64_t left = length;          // bytes left (whole file to start) TODO right?
+    int64_t left = length;          // bytes left, 0 to start
     std::string event = "no_event"; // indicates to leave event out of req
     
     if (isFirstReq){
@@ -178,7 +179,7 @@ main(int argc, char** argv)
     
     // put GET request as a string and print
     std::string reqStr = reqBuf;
-    std::cout << "~~ http request ~~\n" << reqStr << "\n\n" << std::endl;
+    //std::cout << "~~ http request ~~\n" << reqStr << "\n\n" << std::endl;
 
     delete [] reqBuf; // delete buffer when done
     
