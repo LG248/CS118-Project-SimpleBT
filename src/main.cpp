@@ -177,7 +177,7 @@ main(int argc, char** argv)
     
     // put GET request as a string and print
     std::string reqStr = reqBuf;
-    std::cout << "~~ http request ~~\n" << reqStr << "\n\n" << std::endl;
+    //std::cout << "~~ http request ~~\n" << reqStr << "\n\n" << std::endl;
 
     delete [] reqBuf; // delete buffer when done
     
@@ -190,16 +190,15 @@ main(int argc, char** argv)
     int sockfd = socket(AF_INET, SOCK_STREAM, 0); // uses TCP IP
     
     // format server socket address (not yet used?)
-    // TODO don't hardcode calues
+    // TODO don't hardcode values
     struct sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(12345);     // short, network byte order
     serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
     
-    
 
-    std::cout << "~~ about to try connecting ~~\n\n" << std::endl;
+    //std::cout << "~~ about to try connecting ~~\n\n" << std::endl;
     
     // connect to the server
     if (connect(sockfd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1) {
@@ -207,7 +206,7 @@ main(int argc, char** argv)
       return 2;
     }
     
-    std::cout << "~~ about to get client id ~~\n\n" << std::endl;
+    //std::cout << "~~ about to get client id ~~\n\n" << std::endl;
     
     // TODO clientAddr and ipAddr not used yet
     // get client address from sockfd
@@ -221,8 +220,7 @@ main(int argc, char** argv)
     // display ipaddr as string
     char ipstr[INET_ADDRSTRLEN] = {'\0'};
     inet_ntop(clientAddr.sin_family, &clientAddr.sin_addr, ipstr, sizeof(ipstr));
-    std::cout << "Set up a connection from: " << ipstr << ":" <<
-    ntohs(clientAddr.sin_port) << std::endl;
+    //std::cout << "Set up a connection from: " << ipstr << ":" << ntohs(clientAddr.sin_port) << std::endl;
     
     
     // actual sending (recall metastr is full size, can send all at once)
