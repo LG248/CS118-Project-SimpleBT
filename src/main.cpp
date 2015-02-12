@@ -206,7 +206,7 @@ main(int argc, char** argv)
     // TODO don't hardcode values. also which port - tracker port or argv[1] port?
     struct sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(trackerPort); // short, network byte order
+    serverAddr.sin_port = htons(trackerPort); // short, network byte order. was originally hardcoded as 12345.
     serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
     
