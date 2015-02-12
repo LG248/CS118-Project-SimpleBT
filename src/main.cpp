@@ -46,7 +46,8 @@
  TODO
  0) pass test 4 (started must be the first req)
  1) separate out code with comment blocks (equiv to functions)
- 2) refactor/trim unnecessary code. figure out what lastTree is
+ 2) figure out what lastTree is and whether to get rid of it/merge it
+ 3) refactor ref client.cpp code to liking, and tidy up rest
  */
 
 
