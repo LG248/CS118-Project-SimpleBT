@@ -205,7 +205,7 @@ main(int argc, char** argv)
       if (send(sockfd, input.c_str(), input.size(), 0) == -1) {
         perror("send");
         return 4;
-      //}
+      }
 
     ///// end orig sending code
     
