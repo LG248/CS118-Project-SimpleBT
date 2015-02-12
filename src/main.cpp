@@ -140,11 +140,12 @@ main(int argc, char** argv)
     
     // these just convert GET request buf to string and print
     std::string metastr = metabuf;
-    std::cout << "~~ http request ~~\n" << metastr << std::endl;
+    std::cout << "~~ http request ~~\n" << metastr << "\n\n" << std::endl;
 
     delete [] metabuf; // delete buffer when done
     
-    /////
+    ///// start orig request sending code (also in client.cpp)
+    // TODO why is connection refused? print everything. idk why it doesn't work now.
     /// Send the initial request to the tracker ///
     // Socket code modified from client.cpp posted by Yingdi Yu
     // http://irl.cs.ucla.edu/~yingdi/cs118/proj1/client.cpp
@@ -159,11 +160,15 @@ main(int argc, char** argv)
     serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
     
+    std::cout << "~~ about to try connecting ~~\n\n" << std::cout
+    
     // connect to the server
     if (connect(sockfd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1) {
       perror("connect");
       return 2;
     }
+    
+    std::cout << "~~ about to get client id ~~\n\n" << std::cout
     
     // get client address from sockfd
     struct sockaddr_in clientAddr;
@@ -200,7 +205,7 @@ main(int argc, char** argv)
         return 4;
       //}
 
-    /////
+    ///// end orig sending code
     
     //////////////////////////////////////////////////////////////////////
     
