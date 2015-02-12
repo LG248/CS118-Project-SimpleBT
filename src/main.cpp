@@ -133,6 +133,7 @@ main(int argc, char** argv)
     std::string event = "no_event"; // indicates to leave event out of req
     
     if (isFirstReq){
+      cout << "~~ is first req ~~" << std::endl;
       event = "started";
       isFirstReq = false;
     }
