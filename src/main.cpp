@@ -76,7 +76,7 @@ main(int argc, char** argv)
     std::string file; // don't think i need since we do single file mode 
      */
     
-    uint16_t clientPort;
+    //uint16_t clientPort; // argv[1]
 
     bool isFirstReq = true; // only need event param for first
     bool isFirstResponse = true; // idk what for yet
@@ -112,9 +112,25 @@ main(int argc, char** argv)
     //std::string file = metainfo.getName(); // file to torrent
     int64_t length = metainfo.getLength(); // length of file
     
-    std::cout << announce << std::endl;
-    std::string trackerHost = "local host";
-    uint16_t trackerPort = boost::lexical_cast<uint16_t>("12345");
+    
+    // Get tracker host and port from annouce
+
+    // announce has format like: http[s]://host:12345/announce.php
+    int hostStartPos = 7; // the position after "http://"
+    if (announce.substr(0, 5) == "https"){
+      hostStartPos = 8;
+    }
+    
+    std::string announceAfter = announce.substr(hostStartPos); // after "http://"
+    int colonPos = announceAfter.find(':');
+    int slashPos = announceAfter.find('/');
+    
+    std::string trackerHost = announceAfter.substr(hostStartPos, colonPos);
+    std::string trackerPortStr = announceAfter.substr(colonPos+1, slashPos);
+    uint16_t trackerPort = boost::lexical_cast<uint16_t>(trackerPortStr);
+    
+    std::cout << "host and port: " << trackerHost << ", " << trackerPortStr << std:: endl;
+    
     
   while (true) { // TODO what is the break condition? when does event = closed?
   
