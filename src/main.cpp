@@ -305,6 +305,8 @@ main(int argc, char** argv)
     const std::vector<sbt::PeerInfo>& peers = trackerResponse.getPeers();
     uint64_t m_interval = trackerResponse.getInterval();
     
+    std::cout << "interval: " << m_interval << std::endl;
+        
     // print out peer info for first response only
     if (m_isFirstRes) {
       for (const auto& peer : peers) {
@@ -316,7 +318,12 @@ main(int argc, char** argv)
   //}
 
     
-    ////////////////////////////////////////////////////
-    
+  //////////////////////////////////////////////////// end ref client.cpp code
+        
+  catch (std::exception& e)
+  {
+    std::cerr << "exception: " << e.what() << "\n";
+  }
+        
   return 0;
 }
