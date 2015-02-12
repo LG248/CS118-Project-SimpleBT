@@ -44,10 +44,8 @@
 
 /*
  TODO
- 0) initialize variables (equiv to data members)
  1) separate out code with comment blocks (equiv to functions)
- 2) using (1), separate out while loop from non-while loop stuff (equiv to constructor vs run())
- 3) use isFirstReq and isFirstResponse
+ 2) refactor/trim unnecessary code. figure out what lastTree is
  */
 
 
