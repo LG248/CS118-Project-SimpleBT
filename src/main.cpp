@@ -173,7 +173,7 @@ main(int argc, char** argv)
     size_t reqLen = getReq.getTotalLength();
     char *reqBuf = new char [reqLen];
     getReq.formatRequest(reqBuf);
-    std::cout << reqBuf << std::endl; // TODO do stuff with the char buffer
+    //std::cout << reqBuf << std::endl; // TODO do stuff with the char buffer
     
     // put GET request as a string and print
     std::string reqStr = reqBuf;
@@ -325,16 +325,16 @@ main(int argc, char** argv)
     tss.str(bodyOs.str());
     dict.wireDecode(tss);
   
-  
-    std::cout << tss << std::endl;
+    // tss is decoded body
+    //std::cout << tss << std::endl;
   
     // get interval and peers
     sbt::TrackerResponse trackerResponse;
     trackerResponse.decode(dict);
     const std::vector<sbt::PeerInfo>& peers = trackerResponse.getPeers();
-    uint64_t m_interval = trackerResponse.getInterval();
+    uint64_t interval = trackerResponse.getInterval();
     
-    std::cout << "interval: " << m_interval << std::endl;
+    //std::cout << "interval: " << interval << std::endl;
         
     // print out peer info for first response only
     if (isFirstResponse) {
@@ -349,7 +349,7 @@ main(int argc, char** argv)
   //////////////////////////////////////////////////// end ref client.cpp code
     // wait for interval before sending next request
     close(sockfd);
-    sleep(m_interval);
+    sleep(interval);
   }// end while(true)
   } // end try
     
