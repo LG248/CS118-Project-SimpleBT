@@ -29,7 +29,7 @@ formatTrackerParams(std::string info_hash, // urlencoded metainfo
     "&left=" + std::to_string(left);
     //"&event=" + event;
   
-  if (event.compare("no_event\0") != 0) // if other than "no_event"
+  if (event != "no_event") // if other than "no_event"
   {
     params = params + "&event=" + event;
   }
