@@ -113,8 +113,8 @@ main(int argc, char** argv)
     int64_t length = metainfo.getLength(); // length of file
     
     std::cout << announce << std::endl;
-    std::string trackerHost;
-    std::string trackerPort;
+    std::string trackerHost = "local host";
+    std::string trackerPort = boost::lexical_cast<uint16_t>("12345");
     
   while (true) { // TODO what is the break condition? when does event = closed?
   
