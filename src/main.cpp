@@ -69,7 +69,9 @@ main(int argc, char** argv)
       std::cerr << "Usage: simple-bt <port> <torrent_file>\n";
       return 1;
     }
-      
+    
+    std::cout << "~~ opened file, about to parse ~~" << std::endl;
+    
     sbt::MetaInfo metainfo;
     metainfo.wireDecode(metaFile);
     metaFile.close();
