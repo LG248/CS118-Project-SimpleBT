@@ -121,15 +121,11 @@ main(int argc, char** argv)
       hostStartPos = 8;
     }
     
-    //std::string announceAfter = announce.substr(hostStartPos); // after "http://"
     int colonPos = announce.find(':', hostStartPos);
     int slashPos = announce.find('/', hostStartPos);
     
     std::string trackerHost = announce.substr(hostStartPos, colonPos - hostStartPos);
     std::string trackerPortStr = announce.substr(colonPos+1, slashPos - colonPos - 1);
-    //std::cout << "announceAfter: " << announceAfter << std::endl;
-    std::cout << "hostStartPos, colonPos, slashPos: " << hostStartPos << ", " << colonPos << ", " << slashPos << std::endl;
-    std::cout << "host and port: " << trackerHost << ", " << trackerPortStr << std:: endl;
     
     uint16_t trackerPort = boost::lexical_cast<uint16_t>(trackerPortStr);
     
@@ -186,7 +182,7 @@ main(int argc, char** argv)
     getReq.setHost(trackerHost); //
     getReq.setPort(trackerPort); // the port from .torrent
     getReq.setPath(path); // all those params are in there
-    getReq.setVersion("1.0"); // should be 1.0 or 1.1?
+    getReq.setVersion("1.1"); // TODO should be 1.0 or 1.1?
     getReq.addHeader("Accept-Language", "en-US");
 
     // convert HTTP request to char buf, then to string
@@ -201,17 +197,16 @@ main(int argc, char** argv)
     
     ///// start orig request sending code (also in client.cpp)
 
-    /// Send the initial request to the tracker ///
-    
+    /// Send the initial request to the tracker
     
     //// Connect tracker
     int sockfd = socket(AF_INET, SOCK_STREAM, 0); // uses TCP IP
     
     // format server socket address (not yet used?)
-    // TODO don't hardcode values
+    // TODO don't hardcode values. also which port - tracker port or argv[1] port?
     struct sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(12345);     // short, network byte order
+    serverAddr.sin_port = htons(trackerPort); // short, network byte order
     serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
     
