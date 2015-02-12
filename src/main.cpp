@@ -190,7 +190,7 @@ main(int argc, char** argv)
     // send/receive data to/from connection
     bool isEnd = false;
     std::string input = metastr; // input is data to send
-    //char recbuf[3000] = {0}; // buf holds data received
+    char recbuf[3000] = {0}; // buf holds data received
     /* TODO in a while loop, keep receiving stuff from buffer and
      adding on to the stringstream until you reach some end of file signal
      (maybe a newline or \r\n?), or parse content length from file?
@@ -216,102 +216,102 @@ main(int argc, char** argv)
     //{
     bool m_isFirstRes = true;
     
-      std::stringstream headerOs;
-      std::stringstream bodyOs;
+    std::stringstream headerOs;
+    std::stringstream bodyOs;
       
-      char buf[512] = {0};          // read in 512 chars at a time
-      char lastTree[3] = {0};       // ??? (print out buf to figure out what it is)
+    char buf[512] = {0};          // read in 512 chars at a time
+    char lastTree[3] = {0};       // ??? (print out buf to figure out what it is)
       
-      bool hasEnd = false;          // did you get a message saying to close?
-      bool hasParseHeader = false;  // has header been parsed into HttpResponse obj response?
-      HttpResponse response;
+    bool hasEnd = false;          // did you get a message saying to close?
+    bool hasParseHeader = false;  // has header been parsed into HttpResponse obj response?
+    sbt::HttpResponse response;
       
-      uint64_t bodyLength = 0;
+    uint64_t bodyLength = 0;
+    
+    while (true) {
+      memset(buf, '\0', sizeof(buf)); // null-terminate buffer
+      memcpy(buf, lastTree, 3);       // set first three chars of buf to lastTree
       
-      while (true) {
-        memset(buf, '\0', sizeof(buf)); // null-terminate buffer
-        memcpy(buf, lastTree, 3);       // set first three chars of buf to lastTree
-        
-        // read in (512 - 3) chars (skip first 3 chars)
-        // res = size of buf received
-        ssize_t res = recv(sockfd, buf + 3, 512 - 3, 0);
-        
-        if (res == -1) { // if error in recv
-          perror("recv");
-          return;
-        }
-        
-        const char* endline = 0; // will point to end of header
-        
-        if (!hasEnd) {            // if end not found
-          // memmem finds first occurance of "\r\n\r\n" (len 4) in buf
-          endline = (const char*)memmem(buf, res, "\r\n\r\n", 4);
-        }
-        
-        if (endline != 0) {      // if rnrn is found
-          const char* headerEnd = endline + 4; // end of header after "\r\n\r\n"
-          
-          headerOs.write(buf + 3, (endline + 4 - buf - 3)); // write to ss, skipping lastTree
-          
-          if (headerEnd < (buf + 3 + res)) { // if headerEnd extends beyond end of http header
-            bodyOs.write(headerEnd, (buf + 3 + res - headerEnd)); // write remainder to body
-          }
-          
-          hasEnd = true;
-        }
-        
-        else { // if rnrn not part of buf
-          if (!hasEnd) { // if not yet at end of header (rnrn)
-            memcpy(lastTree, buf + res, 3); // set lastTree to first 3 chars after buf
-            headerOs.write(buf + 3, res);   // write header to ss
-          }
-          else // if done with header, write body
-            bodyOs.write(buf + 3, res);
-        }
-        
-        if (hasEnd) { // if at end of header
-          if (!hasParseHeader) { // if header not parsed (put into http response object)
-            response.parseResponse(headerOs.str().c_str(), headerOs.str().size());
-            hasParseHeader = true;
-            
-            bodyLength = boost::lexical_cast<uint64_t>(response.findHeader("Content-Length"));
-          }
-        }
-        
-        // if header is parsed and body0s contains full body, done with recv
-        if (hasParseHeader && bodyOs.str().size() >= bodyLength)
-          break;
+      // read in (512 - 3) chars (skip first 3 chars)
+      // res = size of buf received
+      ssize_t res = recv(sockfd, buf + 3, 512 - 3, 0);
+      
+      if (res == -1) { // if error in recv
+        perror("recv");
+        return 5; // TODO make sure error return values are sequential
       }
       
-      close(sockfd);
-      FD_CLR(m_trackerSock, &m_readSocks);
+      const char* endline = 0; // will point to end of header
       
-      /// parse tracker response and get interval
+      if (!hasEnd) {            // if end not found
+        // memmem finds first occurance of "\r\n\r\n" (len 4) in buf
+        endline = (const char*)memmem(buf, res, "\r\n\r\n", 4);
+      }
+      
+      if (endline != 0) {      // if rnrn is found
+        const char* headerEnd = endline + 4; // end of header after "\r\n\r\n"
+        
+        headerOs.write(buf + 3, (endline + 4 - buf - 3)); // write to ss, skipping lastTree
+        
+        if (headerEnd < (buf + 3 + res)) { // if headerEnd extends beyond end of http header
+          bodyOs.write(headerEnd, (buf + 3 + res - headerEnd)); // write remainder to body
+        }
+        
+        hasEnd = true;
+      }
+      
+      else { // if rnrn not part of buf
+        if (!hasEnd) { // if not yet at end of header (rnrn)
+          memcpy(lastTree, buf + res, 3); // set lastTree to first 3 chars after buf
+          headerOs.write(buf + 3, res);   // write header to ss
+        }
+        else // if done with header, write body
+          bodyOs.write(buf + 3, res);
+      }
+      
+      if (hasEnd) { // if at end of header
+        if (!hasParseHeader) { // if header not parsed (put into http response object)
+          response.parseResponse(headerOs.str().c_str(), headerOs.str().size());
+          hasParseHeader = true;
+          
+          bodyLength = boost::lexical_cast<uint64_t>(response.findHeader("Content-Length"));
+        }
+      }
+      
+      // if header is parsed and body0s contains full body, done with recv
+      if (hasParseHeader && bodyOs.str().size() >= bodyLength)
+        break;
+    }
+    
+    close(sockfd);
+    FD_CLR(m_trackerSock, &m_readSocks);
+    
+    /// parse tracker response and get interval
+
+    // convert body0s to ss, then wireDecode into dict
+    bencoding::Dictionary dict;
+    std::stringstream tss;
+    tss.str(bodyOs.str());
+    dict.wireDecode(tss);
   
-      // convert body0s to ss, then wireDecode into dict
-      bencoding::Dictionary dict;
-      std::stringstream tss;
-      tss.str(bodyOs.str());
-      dict.wireDecode(tss);
+  
+    std::cout << tss << std::endl;
+  
+    // get interval and peers
+    TrackerResponse trackerResponse;
+    trackerResponse.decode(dict);
+    const std::vector<PeerInfo>& peers = trackerResponse.getPeers();
+    m_interval = trackerResponse.getInterval();
     
-    
-      std::cout << tss << std::endl;
-    
-      // get interval and peers
-      TrackerResponse trackerResponse;
-      trackerResponse.decode(dict);
-      const std::vector<PeerInfo>& peers = trackerResponse.getPeers();
-      m_interval = trackerResponse.getInterval();
-      
-      // print out peer info for first response only
-      if (m_isFirstRes) {
-        for (const auto& peer : peers) {
-          std::cout << peer.ip << ":" << peer.port << std::endl;
-        }
+    // print out peer info for first response only
+    if (m_isFirstRes) {
+      for (const auto& peer : peers) {
+        std::cout << peer.ip << ":" << peer.port << std::endl;
       }
-      
-      m_isFirstRes = false;
-    //}
+    }
+    
+    m_isFirstRes = false;
+  //}
 
     
     ////////////////////////////////////////////////////
