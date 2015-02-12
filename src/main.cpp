@@ -82,12 +82,12 @@ main(int argc, char** argv)
     bool isFirstReq = true; // only need event param for first
     bool isFirstResponse = true; // idk what for yet
     
-    int sockfd; // equiv to trackerSock in ref code
-    int serverSock = -1; // for part 2?
+    //int sockfd; // equiv to trackerSock in ref code, already init inside while(true)
+    //int serverSock = -1; // for part 2?
     
-    fd_set readSocks; // only used in FD_CLR(sockfd, &readSocks), which just removes sockfd from the readSocks set. not sure if needed.
+    //fd_set readSocks; // only used in FD_CLR(sockfd, &readSocks), which just removes sockfd from the readSocks set. not sure if needed.
     
-    uint64_t interval; // eyyy
+    //uint64_t interval; // eyyy, already init inside while(true)
 
     
     
@@ -173,7 +173,7 @@ main(int argc, char** argv)
     // get HTTP request as char buffer
     size_t reqLen = getReq.getTotalLength();
     char *reqBuf = new char [reqLen];
-    getReq.formatRequest(metaBuf);
+    getReq.formatRequest(reqBuf);
     std::cout << reqBuf << std::endl; // TODO do stuff with the char buffer
     
     // put GET request as a string and print
@@ -246,7 +246,7 @@ main(int argc, char** argv)
     //void
     //Client::recvTrackerResponse()
     //{
-    bool m_isFirstRes = true;
+    //bool m_isFirstRes = true;
     
     std::stringstream headerOs;
     std::stringstream bodyOs;
