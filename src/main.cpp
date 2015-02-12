@@ -128,6 +128,7 @@ main(int argc, char** argv)
     std::string trackerHost = announceAfter.substr(0, colonPos);
     std::string trackerPortStr = announceAfter.substr(colonPos+1, slashPos);
     std::cout << "announceAfter: " << announceAfter << std::endl;
+    std::cout << "colonPos, slashPos: " << colonPos << ", " << slashPos << std::endl;
     std::cout << "host and port: " << trackerHost << ", " << trackerPortStr << std:: endl;
     
     uint16_t trackerPort = boost::lexical_cast<uint16_t>(trackerPortStr);
