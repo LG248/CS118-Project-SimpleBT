@@ -319,7 +319,8 @@ main(int argc, char** argv)
 
     
   //////////////////////////////////////////////////// end ref client.cpp code
-        
+  } // end try
+    
   catch (std::exception& e)
   {
     std::cerr << "exception: " << e.what() << "\n";
