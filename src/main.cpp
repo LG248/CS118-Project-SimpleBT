@@ -254,7 +254,7 @@ main(int argc, char** argv)
     std::stringstream headerOs;
     std::stringstream bodyOs;
       
-    char recvBuf[512] = {0};          // read in 512 chars at a time
+    char recvBuf[3000] = {0};          // read in 3000 chars at a time
     char lastTree[3] = {0};       // ??? (print out buf to figure out what it is)
       
     bool hasEnd = false;          // did you get a message saying to close?
@@ -268,7 +268,7 @@ main(int argc, char** argv)
       memcpy(recvBuf, lastTree, 3);       // set first three chars of buf to lastTree
       
       // print
-      std::cout << "0last tree: " << lastTree << std::endl;
+      std::cout << "0last tree: " << lastTree << "_";
       
       for (int i = 0; i < 3; i++){
           std::cout << static_cast<unsigned>(lastTree[i]) << '_';
@@ -276,9 +276,9 @@ main(int argc, char** argv)
       std::cout << std::endl;
       //
       
-      // read in (512 - 3) chars (skip first 3 chars)
+      // read in (3000 - 3) chars (skip first 3 chars)
       // res = size of buf received
-      ssize_t res = recv(sockfd, recvBuf + 3, 512 - 3, 0);
+      ssize_t res = recv(sockfd, recvBuf + 3, 3000 - 3, 0);
       
       if (res == -1) { // if error in recv
         perror("recv");
@@ -310,7 +310,7 @@ main(int argc, char** argv)
           
           
           // print
-          std::cout << "1last tree: " << lastTree << std::endl;
+          std::cout << "1last tree: " << lastTree << "_";
           
           for (int i = 0; i < 3; i++){
             std::cout << static_cast<unsigned>(lastTree[i]) << '_';
@@ -322,7 +322,7 @@ main(int argc, char** argv)
 
           
           // print
-          std::cout << "0last tree: " << lastTree << std::endl;
+          std::cout << "2last tree: " << lastTree << "_";
           
           for (int i = 0; i < 3; i++){
             std::cout << static_cast<unsigned>(lastTree[i]) << '_';
@@ -334,6 +334,8 @@ main(int argc, char** argv)
           
           
           headerOs.write(recvBuf + 3, res);   // write header to ss
+          
+          std::cout << headerOs << std::endl;
         }
         else // if done with header, write body
           bodyOs.write(recvBuf + 3, res);
