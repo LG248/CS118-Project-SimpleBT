@@ -251,6 +251,14 @@ main(int argc, char** argv)
     //{
     //bool m_isFirstRes = true;
     
+    /* notes on lastTree
+     - currently lastTree is always three null characters
+     - lastTree doesn't change to other characters over the course of a run,
+       and is only updated when we haven't reached the end of header
+
+     TODO remove lastTree from final code if it's not used in part 2, check that everything still works
+     
+     */
     std::stringstream headerOs;
     std::stringstream bodyOs;
       
@@ -267,14 +275,14 @@ main(int argc, char** argv)
       memset(recvBuf, '\0', sizeof(recvBuf)); // null-terminate buffer
       memcpy(recvBuf, lastTree, 3);       // set first three chars of buf to lastTree
       
-      // print
+      /* print
       std::cout << "0last tree: " << lastTree << "_";
       
       for (int i = 0; i < 3; i++){
           std::cout << static_cast<unsigned>(lastTree[i]) << '_';
       }
       std::cout << std::endl;
-      //
+      */
       
       // read in (3000 - 3) chars (skip first 3 chars)
       // res = size of buf received
@@ -309,26 +317,26 @@ main(int argc, char** argv)
 
           
           
-          // print
+          /* print
           std::cout << "1last tree: " << lastTree << "_";
           
           for (int i = 0; i < 3; i++){
             std::cout << static_cast<unsigned>(lastTree[i]) << '_';
           }
           std::cout << std::endl;
-          //
+          */
           
           memcpy(lastTree, recvBuf + res, 3); // set lastTree to first 3 chars after buf
 
           
-          // print
+          /* print
           std::cout << "2last tree: " << lastTree << "_";
           
           for (int i = 0; i < 3; i++){
             std::cout << static_cast<unsigned>(lastTree[i]) << '_';
           }
           std::cout << std::endl;
-          //
+          */
           
           
           
