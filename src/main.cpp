@@ -274,7 +274,7 @@ main(int argc, char** argv)
         else
           std::cout << '-';
       }
-      std::cout << endl;
+      std::cout << std::endl;
       
       // read in (512 - 3) chars (skip first 3 chars)
       // res = size of buf received
