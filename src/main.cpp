@@ -268,11 +268,12 @@ main(int argc, char** argv)
       memcpy(recvBuf, lastTree, 3);       // set first three chars of buf to lastTree
       
       std::cout << "0last tree: " << lastTree << std::endl;
+      
       for (int i = 0; i <= 3; i++){
         if (isprint(lastTree[i]))
           std::cout << lastTree[i];
         else
-          std::cout << '-';
+          std::cout << static_cast<unsigned>(lastTree[i]) << '_';
       }
       std::cout << std::endl;
       
