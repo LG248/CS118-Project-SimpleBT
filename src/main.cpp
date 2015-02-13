@@ -267,12 +267,14 @@ main(int argc, char** argv)
       memset(recvBuf, '\0', sizeof(recvBuf)); // null-terminate buffer
       memcpy(recvBuf, lastTree, 3);       // set first three chars of buf to lastTree
       
+      // print
       std::cout << "0last tree: " << lastTree << std::endl;
       
       for (int i = 0; i < 3; i++){
           std::cout << static_cast<unsigned>(lastTree[i]) << '_';
       }
       std::cout << std::endl;
+      //
       
       // read in (512 - 3) chars (skip first 3 chars)
       // res = size of buf received
@@ -305,8 +307,32 @@ main(int argc, char** argv)
       else { // if rnrn not part of buf
         if (!hasEnd) { // if not yet at end of header (rnrn)
 
+          
+          
+          // print
+          std::cout << "1last tree: " << lastTree << std::endl;
+          
+          for (int i = 0; i < 3; i++){
+            std::cout << static_cast<unsigned>(lastTree[i]) << '_';
+          }
+          std::cout << std::endl;
+          //
+          
           memcpy(lastTree, recvBuf + res, 3); // set lastTree to first 3 chars after buf
 
+          
+          // print
+          std::cout << "0last tree: " << lastTree << std::endl;
+          
+          for (int i = 0; i < 3; i++){
+            std::cout << static_cast<unsigned>(lastTree[i]) << '_';
+          }
+          std::cout << std::endl;
+          //
+          
+          
+          
+          
           headerOs.write(recvBuf + 3, res);   // write header to ss
         }
         else // if done with header, write body
