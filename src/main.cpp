@@ -190,12 +190,9 @@ main(int argc, char** argv)
     char *reqBuf = new char [reqLen];
     getReq.formatRequest(reqBuf);
     std::string reqStr = reqBuf;
-    //std::cout << "~~ http request ~~\n" << reqBuf << "\n\n" << std::endl;
-    //std::cout << "~~ http request ~~\n" << reqStr << "\n\n" << std::endl;
-
     delete [] reqBuf; // delete buffer when done
     
-    ///// start orig request sending code (also in client.cpp)
+    ///// start orig request sending code (also in my copy of client.cpp)
 
     /// Send the initial request to the tracker
     
@@ -211,15 +208,11 @@ main(int argc, char** argv)
     memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
     
 
-    //std::cout << "~~ about to try connecting ~~\n\n" << std::endl;
-    
     // connect to the server
     if (connect(sockfd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1) {
       perror("connect");
       return 2;
     }
-    
-    //std::cout << "~~ about to get client id ~~\n\n" << std::endl;
     
     // TODO clientAddr and ipAddr not used yet
     // get client address from sockfd
@@ -270,9 +263,11 @@ main(int argc, char** argv)
       
     uint64_t bodyLength = 0;
     
-    while (true) {
+    while (true) { // while more data to receive
       memset(recvBuf, '\0', sizeof(recvBuf)); // null-terminate buffer
       memcpy(recvBuf, lastTree, 3);       // set first three chars of buf to lastTree
+      
+      std::cout << "0last tree: " << lastTree << std::endl;
       
       // read in (512 - 3) chars (skip first 3 chars)
       // res = size of buf received
@@ -304,7 +299,11 @@ main(int argc, char** argv)
       
       else { // if rnrn not part of buf
         if (!hasEnd) { // if not yet at end of header (rnrn)
+          std::cout << "11last tree: " << lastTree << std::endl;
+
           memcpy(lastTree, recvBuf + res, 3); // set lastTree to first 3 chars after buf
+          std::cout << "12last tree: " << lastTree << std::endl;
+
           headerOs.write(recvBuf + 3, res);   // write header to ss
         }
         else // if done with header, write body
@@ -326,9 +325,9 @@ main(int argc, char** argv)
     }
     
     close(sockfd);
-    fd_set m_readSocks; // taken from data member of client.hpp
+    //fd_set m_readSocks; // taken from data member of client.hpp
 
-    FD_CLR(sockfd, &m_readSocks);
+    //FD_CLR(sockfd, &m_readSocks);
     
     /// parse tracker response and get interval
 
