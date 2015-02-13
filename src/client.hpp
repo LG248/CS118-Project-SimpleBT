@@ -17,6 +17,7 @@
  * NSL, e.g., in COPYING.md file.  If not, see <http://www.gnu.org/licenses/>.
  *
  * \author Yingdi Yu <yingdi@cs.ucla.edu>
+ * \author LG248
  */
 
 #ifndef SBT_CLIENT_HPP

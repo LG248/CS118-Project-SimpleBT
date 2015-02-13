@@ -44,9 +44,13 @@
 
 /*
  TODO
- 1) separate out code with comment blocks (equiv to functions)
- 2) figure out what lastTree is and whether to get rid of it/merge it
- 3) refactor ref client.cpp code to liking, and tidy up rest
+ pt 1
+ - figure out what lastTree is and whether to get rid of it/merge it
+ - refactor ref client.cpp code to liking, and tidy up rest
+ 
+ pt 2
+ - currently sticking in peer-protocol.hpp/cpp
+ 
  */
 
 
@@ -73,21 +77,32 @@ main(int argc, char** argv)
     sbt::MetaInfo metainfo; // holds info from .torrent file
     std::string host; // tracker host to use in GET request to tracker ("localhost")
     std::string port; // tracker port (12345), currently an int in my code
-    std::string file; // don't think i need since we do single file mode 
+    std::string file; // from metainfo
      */
+    
     
     //uint16_t clientPort; // argv[1]
 
     bool isFirstReq = true; // only need event param for first
     bool isFirstResponse = true; // idk what for yet
+
     
     //int sockfd; // equiv to trackerSock in ref code, already init inside while(true)
     //int serverSock = -1; // for part 2?
     
     //fd_set readSocks; // only used in FD_CLR(sockfd, &readSocks), which just removes sockfd from the readSocks set. not sure if needed.
     
-    //uint64_t interval; // eyyy, already init inside while(true)
+    //uint64_t interval; // eyyy, already init inside while(true). updates each loop.
     
+    
+    // variables for tracker request
+    std::string peer_id = "SIMPLEBT-TEST-PEERID"; // pt2 client peer id, used for handshake and tracker req
+    std::string ip_str = "127.0.0.1";        // ip of client machine
+    int port = std::atoi(argv[1]);  // client should listen on this port
+    int64_t uploaded = 0;           // bytes uploaded
+    int64_t downloaded = 0;         // bytes downloaded
+    int64_t left;          // bytes left, num bytes missing to start
+    std::string event = "no_event"; // indicates to leave event out of req
     
     //// Get metainfo
     
@@ -146,18 +161,33 @@ main(int argc, char** argv)
     uint8_t* hashbuf2 = hashbuf1.buf();
     std::string info_hash = sbt::url::encode(hashbuf2, 20); // 20-byte encoding
     
+    
     // set other params
+    /*
     std::string peer_id = "somepeer";        // urlencoded peer id for client
     std::string ip_str = "127.0.0.1";        // ip of client machine
     int port = std::atoi(argv[1]);  // port number for peer communication
-    int64_t uploaded = 0;           // bytes uploaded, 0 to start
+    int64_t uploaded = 0;           // bytes uploaded
     int64_t downloaded = 0;         // bytes downloaded
     int64_t left = length;          // bytes left, 0 to start
     std::string event = "no_event"; // indicates to leave event out of req
+    */
     
     if (isFirstReq){
       event = "started";
+      uploaded = 0;
+      downloaded = 0;
+      left = length; // in first req, set to number of bytes missing in existing file
       isFirstReq = false;
+      
+    }
+    
+    else {
+      // TODO update status for tracker request (ul'd, dl'd, left)
+      // TODO update event to completed after client finishes downloading
+      left = length;
+      event = "no_event";
+    
     }
     
     // format params
@@ -392,11 +422,33 @@ main(int argc, char** argv)
       for (const auto& peer : peers) {
         std::cout << peer.ip << ":" << peer.port << std::endl;
       }
+      
+      isFirstResponse = false;
     }
     
-    isFirstResponse = false;
+    
   //}
 
+    //// CONNECT TO EACH PEER
+    
+    // skip peers that already have connection (whether through connect or accept)
+    // don't connect to client itself (peer list may have client ip and port)
+    // more peers may be in subsequent tracker responses
+    
+    
+    // PEER PROTOCOL
+    
+    // handshake - include client peerid. see handshake.hpp
+    // unchoke
+    // interested
+    // have
+    // bitfield - initiator sends bitfield to B, B sends own bitfield back
+    // request
+    // piece
+    
+    // ignore keep-alive, choke, not interested, cancel
+    
+    
   //////////////////////////////////////////////////// end ref client.cpp code
     // wait for interval before sending next request
     close(sockfd);
