@@ -268,6 +268,13 @@ main(int argc, char** argv)
       memcpy(recvBuf, lastTree, 3);       // set first three chars of buf to lastTree
       
       std::cout << "0last tree: " << lastTree << std::endl;
+      for (int i = 0; i <= 3; i++){
+        if (isprint(lastTree[i]))
+          std::cout << lastTree[i];
+        else
+          std::cout << '-';
+      }
+      std::cout << endl;
       
       // read in (512 - 3) chars (skip first 3 chars)
       // res = size of buf received
@@ -299,10 +306,8 @@ main(int argc, char** argv)
       
       else { // if rnrn not part of buf
         if (!hasEnd) { // if not yet at end of header (rnrn)
-          std::cout << "11last tree: " << lastTree << std::endl;
 
           memcpy(lastTree, recvBuf + res, 3); // set lastTree to first 3 chars after buf
-          std::cout << "12last tree: " << lastTree << std::endl;
 
           headerOs.write(recvBuf + 3, res);   // write header to ss
         }
