@@ -269,10 +269,7 @@ main(int argc, char** argv)
       
       std::cout << "0last tree: " << lastTree << std::endl;
       
-      for (int i = 0; i <= 3; i++){
-        if (isprint(lastTree[i]))
-          std::cout << lastTree[i];
-        else
+      for (int i = 0; i < 3; i++){
           std::cout << static_cast<unsigned>(lastTree[i]) << '_';
       }
       std::cout << std::endl;
