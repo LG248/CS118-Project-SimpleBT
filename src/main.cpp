@@ -70,7 +70,7 @@ main(int argc, char** argv)
     // Initialise the client. TODO client doesn't do shit atm
     //sbt::Client client(argv[1], argv[2]);
     
-    //// Initialize useful variables
+    //// Initialize useful variables and flags
     
     /* 
      // parsing metainfo vars
@@ -96,7 +96,7 @@ main(int argc, char** argv)
     
     
     // variables for tracker request
-    std::string peer_id = "SIMPLEBT-TEST-PEERID"; // pt2 client peer id, used for handshake and tracker req
+    std::string peer_id = "SIMPLEBT.TEST.PEERID"; // pt2 client peer id, used for handshake and tracker req
     std::string ip_str = "127.0.0.1";        // ip of client machine
     int port = std::atoi(argv[1]);  // client should listen on this port
     int64_t uploaded = 0;           // bytes uploaded

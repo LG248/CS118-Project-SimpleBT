@@ -2,7 +2,7 @@
 //  peer-protocol.cpp
 //  
 //
-//  Created by L on 2/13/15.
+//  \author LG248
 //
 //
 
@@ -19,6 +19,14 @@
 // PEER PROTOCOL
 
 // handshake - include client peerid. see handshake.hpp
+HandShake parseHandshake(IDKType stuff_recv_from_peer);
+
+HandShake recHandshake; // handshake received from peer
+peerHandShake.setInfoHash(m_metaInfo.getHash()); // TODO pass metainfo as param to ClientPeer(), add data members
+peerHandShake.setPeerId("SIMPLEBT.TEST.PEERID");
+ConstBufferPtr message = recHandshake.encode();
+const char* msgbuf = reinterpret_cast<const char*>(message->buf());
+??? = handShake.decode(msgbuf);
 
 // bitfield - initiator sends bitfield to B after handshake, B sends own bitfield back
 
@@ -32,7 +40,7 @@
 
 // request - one req per piece
     // when receiving Request, read data from file and generate Piece msg
-    // NOTE: the “length” of request is set to “piecelength” in the torrent file 
+    // NOTE: the “length” of request is set to “piecelength” in the torrent file
 // piece
     // when receiving Piece msg, check piece with hash from .torrent
     // if verified ok, write to file and send Have to all peers. else drop piece and request it again
